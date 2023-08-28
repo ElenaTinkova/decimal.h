@@ -14,3 +14,14 @@ void s21_set_bit(s21_decimal *value, int index, int bit) {
   else
     value->bits[num_bit] &= ~(1 << position); // меняем на 0
 }
+
+int s21_get_sign(s21_decimal *value) {
+  return (value->bits[3] & MASK_MINUS);
+}
+
+void s21_set_sign(s21_decimal *value, int sign) {
+  if (sign)
+    value->bits[3] |= MASK_MINUS;
+  else
+    value->bits[3] &= ~(MASK_MINUS);
+}

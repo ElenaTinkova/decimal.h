@@ -1,6 +1,9 @@
 #ifndef S21_DECIMAL_H_
 #define S21_DECIMAL_H_
 
+#define MASK_MINUS 0x80000000 // 0b10000000000000000000000000000000
+#define MASK_SCALE 0x00ff0000 // 0b00000000111111110000000000000000
+
 typedef struct {
   unsigned int bits[4];
 } s21_decimal;
@@ -11,6 +14,8 @@ typedef struct {
 
 int s21_get_bit(s21_decimal *value, int index);
 void s21_set_bit(s21_decimal *value, int index, int bit);
+int s21_get_sign(s21_decimal *value);
+void s21_set_sign(s21_decimal *value, int sign);
 
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
