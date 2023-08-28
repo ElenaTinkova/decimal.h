@@ -11,6 +11,8 @@ typedef struct {
 
 int s21_get_bit(s21_decimal *value, int index);
 void s21_set_bit(s21_decimal *value, int index, int bit);
+int s21_get_sign(s21_decimal *value);
+void s21_set_sign(s21_decimal *value, int bit);
 
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);

@@ -14,3 +14,12 @@ void s21_set_bit(s21_decimal *value, int index, int bit) {
   else
     value->bits[num_bit] &= ~(1 << position); // меняем на 0
 }
+
+int s21_get_sign(s21_decimal *value){
+  int check_sign = s21_get_bit(value, 127);
+  return check_sign;
+}
+
+void s21_set_sign(s21_decimal *value, int bit){
+  s21_set_bit(value, 127, bit);
+}
