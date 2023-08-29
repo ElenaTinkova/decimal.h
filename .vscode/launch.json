@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/leyapatty/Desktop/school21/decimal-group",
+      "program": "/Users/leyapatty/Desktop/school21/decimal-group/build/Debug/outDebug"
+    }
+  ]
+}
