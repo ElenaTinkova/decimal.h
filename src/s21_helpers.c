@@ -1,4 +1,5 @@
 #include "s21_decimal.h"
+#include <stdio.h>
 
 int s21_get_bit(s21_decimal *value, int index) {
   int num_bit = index / 32; // определяем в каком bits структуры работаем
@@ -22,4 +23,15 @@ int s21_get_sign(s21_decimal *value){
 
 void s21_set_sign(s21_decimal *value, int bit){
   s21_set_bit(value, 127, bit);
+}
+
+int s21_get_pow(s21_decimal *value){
+  int pow;
+  if(s21_get_sign(value)){
+    pow = (value->bits[3] ^ MASK_MINUS) >> 16;
+  }else{
+    pow = value->bits[3] >> 16;
+  }
+
+  return pow;
 }
