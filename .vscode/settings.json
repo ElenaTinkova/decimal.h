@@ -34,5 +34,22 @@
     "**/.vscode/**"
   ],
   "C_Cpp_Runner.useAddressSanitizer": false,
-  "C_Cpp_Runner.showCompilationTime": false
+  "C_Cpp_Runner.showCompilationTime": false,
+  "files.associations": {
+    "__bit_reference": "c",
+    "__functional_base": "c",
+    "algorithm": "c",
+    "bitset": "c",
+    "chrono": "c",
+    "__memory": "c",
+    "functional": "c",
+    "iterator": "c",
+    "limits": "c",
+    "ratio": "c",
+    "tuple": "c",
+    "type_traits": "c",
+    "vector": "c",
+    "memory": "c",
+    "cstddef": "c"
+  }
 }
