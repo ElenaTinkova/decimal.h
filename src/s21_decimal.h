@@ -12,13 +12,15 @@ typedef struct {
   unsigned int bits[8];
 } s21_big_decimal;
 
-void s21_print_decimal(s21_decimal *value);
-int s21_get_bit(s21_decimal *value, int index);
-void s21_set_bit(s21_decimal *value, int index, int bit);
-int s21_get_sign(s21_decimal *value);
-void s21_set_sign(s21_decimal *value, int bit);
-int s21_get_pow(s21_decimal *value);
-void s21_levelup_pow(s21_decimal *value, int difference_number);
+void s21_print_decimal(s21_big_decimal *value);
+int s21_get_bit(s21_big_decimal *value, int index);
+void s21_set_bit(s21_big_decimal *value, int index, int bit);
+int s21_get_sign(s21_big_decimal *value);
+void s21_set_sign(s21_big_decimal *value, int bit);
+int s21_get_pow(s21_big_decimal *value);
+void s21_levelup_pow(s21_big_decimal *value, int difference_number);
+
+void s21_mul_ten(s21_big_decimal *value, int difference_number);
 
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);

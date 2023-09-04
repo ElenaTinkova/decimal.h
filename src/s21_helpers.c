@@ -2,8 +2,8 @@
 #include <stdio.h>
 
 //-----------Вывод decimal в консоль-----------//
-void s21_print_decimal(s21_decimal *value){
-  int size_decimal = sizeof(s21_decimal) / 4 - 1; //Кол-во bits в структуре
+void s21_print_decimal(s21_big_decimal *value){
+  int size_decimal = sizeof(s21_big_decimal) / 4 - 1; //Кол-во bits в структуре
   for(int i = size_decimal; i >= 0; i--){ //Цикл bits
     printf("bits[%d] ", i);
     for(int j = 31; j >= 0; j--){ //Цикл byte в bits
@@ -18,14 +18,14 @@ void s21_print_decimal(s21_decimal *value){
 }
 
 //-----------Получение бита-----------//
-int s21_get_bit(s21_decimal *value, int index) {
+int s21_get_bit(s21_big_decimal *value, int index) {
   int num_bit = index / 32; // определяем в каком bits структуры работаем
   int position = index % 32; // определяем позицию бита, который хотим проверить 
   return (value->bits[num_bit] & (1 << position)) >> position; // возвращаем значение искомого бита
 }
 
 //-----------Изменение бита-----------//
-void s21_set_bit(s21_decimal *value, int index, int bit) {
+void s21_set_bit(s21_big_decimal *value, int index, int bit) {
   int num_bit = index / 32;
   int position = index % 32;
   if (bit)
@@ -35,29 +35,39 @@ void s21_set_bit(s21_decimal *value, int index, int bit) {
 }
 
 //-----------Получение знака decimal-----------//
-int s21_get_sign(s21_decimal *value){
-  int check_sign = s21_get_bit(value, 127);
+int s21_get_sign(s21_big_decimal *value){
+  int size_decimal = sizeof(s21_big_decimal) / 4 - 1; //Кол-во bits в структуре
+  int check_sign = value->bits[size_decimal] >> 31;
   return check_sign;
 }
 
 //-----------Изменение знака decimal-----------//
-void s21_set_sign(s21_decimal *value, int bit){
-  s21_set_bit(value, 127, bit);
+void s21_set_sign(s21_big_decimal *value, int bit){
+  int size_decimal = sizeof(s21_big_decimal) / 4 - 1; //Кол-во bits в структуре
+  // int check_sign = value->bits[size_decimal] >> 31;
+  // s21_set_bit(value, 127, bit);
+ if (bit){
+  value->bits[size_decimal] |= MASK_MINUS;
+ } else {
+  value->bits[size_decimal] &= ~ MASK_MINUS;
+ }
+
 }
 
 //-----------Получение степени decimal-----------//
-int s21_get_pow(s21_decimal *value){
+int s21_get_pow(s21_big_decimal *value){
+  int size_decimal = sizeof(s21_big_decimal) / 4 - 1;
   int pow;
   if(s21_get_sign(value)){
-    pow = (value->bits[3] ^ MASK_MINUS) >> 16;
+    pow = (value->bits[size_decimal] ^ MASK_MINUS) >> 16;
   }else{
-    pow = value->bits[3] >> 16;
+    pow = value->bits[size_decimal] >> 16;
   }
   return pow;
 }
 
 //-----------Разница степеней decimal-----------//
-int s21_difference_pow(s21_decimal *value1, s21_decimal *value2){
+int s21_difference_pow(s21_big_decimal *value1, s21_big_decimal *value2){
   
   //if return 0 ? степени одинаковые 
   //if return > 0 ? степень value1 больше, чем value2 в return раз
@@ -66,66 +76,62 @@ int s21_difference_pow(s21_decimal *value1, s21_decimal *value2){
   return (s21_get_pow(value1)) - (s21_get_pow(value2));
 }
 
-//-----------Увеличение степени в n раз-----------//
-void s21_levelup_pow(s21_decimal *value, int difference_number){
 
+//-----------Увеличение степени на n раз-----------//
+void s21_levelup_pow(s21_big_decimal *value, int difference_number){
+  int size_decimal = sizeof(s21_big_decimal) / 4 - 1;
+  int value_pow;
   //Заполнение массива под степень
-  int pow_mas[8] = {0};
-  int count_pow = 112; //Позиция степени
-
-  for(int i = 0; i < 8; i++){ 
-    pow_mas[i] = s21_get_bit(value, count_pow);
-    count_pow++;  
+  if(s21_get_sign(value)){
+    value_pow = (value->bits[size_decimal] ^ MASK_MINUS) >> 16;
+    value_pow += difference_number;
+    value->bits[size_decimal] = value_pow << 16;
+    s21_set_sign(value, 1);
+  }else{
+   value_pow = value->bits[size_decimal] >> 16;
+   value_pow += difference_number;
+   value->bits[size_decimal] = value_pow << 16;
   }
+   
+ // for(int i = 0; i < 8; i++){
+  //   if(pow_mas[i] == 0 && deff_mas[i] == 0 && !buff){
+  //     result_pow[i] = 0;
+  //   }else if(pow_mas[i] == 0 && deff_mas[i] == 0 && buff){
+  //     result_pow[i] = 1;
+  //     buff = 0;
+  //   }else if(pow_mas[i] == 1 && deff_mas[i] == 0 && !buff){
+  //     result_pow[i] = 1;
+  //   }else if(pow_mas[i] == 0 && deff_mas[i] == 1 && !buff){
+  //     result_pow[i] = 1;
+  //   }else if(pow_mas[i] == 0 && deff_mas[i] == 1 && buff){
+  //     result_pow[i] = 0;
+  //     buff = 0;
+  //   }else if(pow_mas[i] == 1 && deff_mas[i] == 0 && buff){
+  //     result_pow[i] = 0;
+  //     buff = 1;
+  //   }else if(pow_mas[i] == 1 && deff_mas[i] == 1 && buff){
+  //     result_pow[i] = 1;
+  //     buff = 1;
+  //   }else if(pow_mas[i] == 1 && deff_mas[i] == 1 && !buff){
+  //     result_pow[i] = 0;
+  //     buff = 1;
+  //   }
+  // }
 
-  //Перевод разницы в двоичную систему счисления
-  int deff_mas[8] = {0};
-  int i = 0;
-  int flag = 0;
-  
-  do{
-    deff_mas[i] = difference_number % 2;
-    i++;
-    difference_number /= 2;
-    if(!difference_number){
-      flag = 1;
+}
+
+void s21_mul_ten(s21_big_decimal *value, int difference_number){
+  int value_mant = value->bits[0];
+  int result = 0;
+  while(difference_number !=0){
+    if (result != 0) result = 0;
+    for(int i = 0; i < 10; i++){
+    result += value_mant;
     }
-  }while(!flag);
-
-  int result_pow[8] = {0};
-  int buff = 0;
-
-  for(int i = 0; i < 8; i++){
-    if(pow_mas[i] == 0 && deff_mas[i] == 0 && !buff){
-      result_pow[i] = 0;
-    }else if(pow_mas[i] == 0 && deff_mas[i] == 0 && buff){
-      result_pow[i] = 1;
-      buff = 0;
-    }else if(pow_mas[i] == 1 && deff_mas[i] == 0 && !buff){
-      result_pow[i] = 1;
-    }else if(pow_mas[i] == 0 && deff_mas[i] == 1 && !buff){
-      result_pow[i] = 1;
-    }else if(pow_mas[i] == 0 && deff_mas[i] == 1 && buff){
-      result_pow[i] = 0;
-      buff = 0;
-    }else if(pow_mas[i] == 1 && deff_mas[i] == 0 && buff){
-      result_pow[i] = 0;
-      buff = 1;
-    }else if(pow_mas[i] == 1 && deff_mas[i] == 1 && buff){
-      result_pow[i] = 1;
-      buff = 1;
-    }else if(pow_mas[i] == 1 && deff_mas[i] == 1 && !buff){
-      result_pow[i] = 0;
-      buff = 1;
-    }
+    value_mant = result;
+    difference_number--;
   }
-
-  //Изменение старой степени на новую
-  count_pow = 112; //Позиция степени
-
-  for(int i = 0; i < 8; i++){ 
-    s21_set_bit(value, count_pow, result_pow[i]);
-    count_pow++;  
-  }
+  printf("\n%d\n", result);
+  value->bits[0] = result;
 }
 
