@@ -5,7 +5,7 @@
 void s21_print_decimal(s21_big_decimal *value){
   int size_decimal = sizeof(s21_big_decimal) / 4 - 1; //Кол-во bits в структуре
   for(int i = size_decimal; i >= 0; i--){ //Цикл bits
-    printf("bits[%d] ", i);
+    // printf("%d", i);
     for(int j = 31; j >= 0; j--){ //Цикл byte в bits
       if(value->bits[i] & (1 << j)){
         printf("1");
@@ -13,7 +13,7 @@ void s21_print_decimal(s21_big_decimal *value){
         printf("0");
       }
     }
-    printf("\n");
+    // printf("\n");
   }
 }
 
@@ -120,18 +120,51 @@ void s21_levelup_pow(s21_big_decimal *value, int difference_number){
 
 }
 
-void s21_mul_ten(s21_big_decimal *value, int difference_number){
-  int value_mant = value->bits[0];
-  int result = 0;
-  while(difference_number !=0){
-    if (result != 0) result = 0;
-    for(int i = 0; i < 10; i++){
-    result += value_mant;
-    }
-    value_mant = result;
-    difference_number--;
+void s21_mul_ten(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result){
+  for(int i = 0; i < 256; i++) {
+    int temp = s21_get_bit(&value2, i); 
+    
+    s21_big_decimal vremia = {0, 0, 0, 0, 0, 0, 0, 0};
+    if(temp) {
+      for(int j = 0; j < 256; j++) {
+        if(s21_get_bit(&value1, j)) {
+          s21_set_bit(&vremia, i + j, 1);
+        }
+
+      }
+    s21_add_function(vremia, *result, result);
+    }  
   }
-  printf("\n%d\n", result);
-  value->bits[0] = result;
 }
 
+void s21_add_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result){
+  int check = 0;
+  int buff = 0;
+  result->bits[0] = 0; 
+  result->bits[1] = 0; //= {0, 0, 0, 0, 0, 0, 0 , 0};
+  result->bits[2] = 0; 
+  result->bits[3] = 0; 
+  result->bits[4] = 0; 
+  result->bits[5] = 0;
+  result->bits[6] = 0; 
+  result->bits[7] = 0;
+  for(int i = 0; i <= 255; i++){
+    check = s21_get_bit(&value1, i) + s21_get_bit(&value2, i);
+    if(check == 0){
+      if(buff){
+        s21_set_bit(result, i, 1);
+        buff = 0;
+      }
+    }else if(check == 1){
+      s21_set_bit(result, i, 1); 
+    }else if(check == 2){
+      if(buff){
+        s21_set_bit(result, i, 1);
+      }else{
+        s21_set_bit(result, i, 0);
+        buff = 1;
+      }
+    } 
+   } 
+
+}    
