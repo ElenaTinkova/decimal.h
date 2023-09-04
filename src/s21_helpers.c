@@ -1,6 +1,18 @@
 #include "s21_decimal.h"
 #include <stdio.h>
 
+//-----------Вывод decimal в консоль-----------//
+void s21_print_decimal(s21_decimal *value){
+  int size_decimal = sizeof(s21_decimal) / 4 - 1; //Кол-во bits в структуре
+  for(int i = size_decimal; i >= 0; i--){
+    printf("bits[%d] ", i);
+    for(int j = 31; j >= 0; j--){
+      printf("%d", value->bits[i] & (1 << j));
+    }
+    printf("\n");
+  }
+}
+
 //-----------Получение бита-----------//
 int s21_get_bit(s21_decimal *value, int index) {
   int num_bit = index / 32; // определяем в каком bits структуры работаем
@@ -76,20 +88,6 @@ void s21_levelup_pow(s21_decimal *value, int difference_number){
     }
   }while(!flag);
 
-  // printf("\n");
-
-  //Увеленичение степени на difference_number
- 
-  // for(int i = 7; i >= 0; i--){
-  //   printf("%d ", pow_mas[i]);
-  // }
-  // printf("\n");
-  // for(int i = 7; i >= 0; i--){
-  //   printf("%d ", deff_mas[i]);
-  // }
-
-  // printf("\n");
-
   int result_pow[8] = {0};
   int buff = 0;
 
@@ -125,17 +123,5 @@ void s21_levelup_pow(s21_decimal *value, int difference_number){
     s21_set_bit(value, count_pow, result_pow[i]);
     count_pow++;  
   }
-
-  printf("\n");
-
-  // for(int i = 7; i >= 0; i--){
-  //   printf("%d ", result_pow[i]);
-  // }
-
-  // printf("\n");
-  // printf("\n");
-
-
-
 }
 

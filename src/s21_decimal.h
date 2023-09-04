@@ -12,7 +12,7 @@ typedef struct {
   unsigned int bits[8];
 } s21_big_decimal;
 
-
+void s21_print_decimal(s21_decimal *value);
 int s21_get_bit(s21_decimal *value, int index);
 void s21_set_bit(s21_decimal *value, int index, int bit);
 int s21_get_sign(s21_decimal *value);
