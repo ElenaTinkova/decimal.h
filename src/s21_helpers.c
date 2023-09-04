@@ -4,10 +4,14 @@
 //-----------Вывод decimal в консоль-----------//
 void s21_print_decimal(s21_decimal *value){
   int size_decimal = sizeof(s21_decimal) / 4 - 1; //Кол-во bits в структуре
-  for(int i = size_decimal; i >= 0; i--){
+  for(int i = size_decimal; i >= 0; i--){ //Цикл bits
     printf("bits[%d] ", i);
-    for(int j = 31; j >= 0; j--){
-      printf("%d", value->bits[i] & (1 << j));
+    for(int j = 31; j >= 0; j--){ //Цикл byte в bits
+      if(value->bits[i] & (1 << j)){
+        printf("1");
+      }else{
+        printf("0");
+      }
     }
     printf("\n");
   }
