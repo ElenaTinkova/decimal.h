@@ -2,19 +2,22 @@
 #include "s21_decimal.h"
 
 int main(){
-    // s21_decimal dec = {4294967295,,0,0};
     s21_big_decimal dec = {4294967294,0,0,0,0,0,0,0};
     s21_big_decimal dec2 = {3,0,0,0,0,0,0,0};
     s21_big_decimal res = {0,0,0,0,0,0,0,0};
-    // s21_add_function(dec, dec2, &res);
     
+    printf("\n***** DECIMAL 1 *****\n\n");
     s21_print_decimal(&dec);
-    printf("\n");
+
+    printf("\n***** DECIMAL 2 *****\n\n");
     s21_print_decimal(&dec2);
-    printf("\n");
 
-    s21_mul_ten(dec, dec2, &res );
+    s21_mul_ten(dec, dec2, &res);
+    // s21_add_function(dec, dec2, &res);
+
+    printf("\n***** RESULT *****\n\n");
     s21_print_decimal(&res);
-
+    0b1111111111111111111111111111111010;
+    0b1011111111111111111111111111111010;
     return 0;
 }

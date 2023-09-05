@@ -5,7 +5,7 @@
 void s21_print_decimal(s21_big_decimal *value){
   int size_decimal = sizeof(s21_big_decimal) / 4 - 1; //Кол-во bits в структуре
   for(int i = size_decimal; i >= 0; i--){ //Цикл bits
-    // printf("%d", i);
+    // printf("bits[%d] ", i);
     for(int j = 31; j >= 0; j--){ //Цикл byte в bits
       if(value->bits[i] & (1 << j)){
         printf("1");
@@ -13,7 +13,7 @@ void s21_print_decimal(s21_big_decimal *value){
         printf("0");
       }
     }
-    // printf("\n");
+    printf("\n");
   }
 }
 
@@ -44,8 +44,6 @@ int s21_get_sign(s21_big_decimal *value){
 //-----------Изменение знака decimal-----------//
 void s21_set_sign(s21_big_decimal *value, int bit){
   int size_decimal = sizeof(s21_big_decimal) / 4 - 1; //Кол-во bits в структуре
-  // int check_sign = value->bits[size_decimal] >> 31;
-  // s21_set_bit(value, 127, bit);
  if (bit){
   value->bits[size_decimal] |= MASK_MINUS;
  } else {
@@ -76,7 +74,6 @@ int s21_difference_pow(s21_big_decimal *value1, s21_big_decimal *value2){
   return (s21_get_pow(value1)) - (s21_get_pow(value2));
 }
 
-
 //-----------Увеличение степени на n раз-----------//
 void s21_levelup_pow(s21_big_decimal *value, int difference_number){
   int size_decimal = sizeof(s21_big_decimal) / 4 - 1;
@@ -92,31 +89,6 @@ void s21_levelup_pow(s21_big_decimal *value, int difference_number){
    value_pow += difference_number;
    value->bits[size_decimal] = value_pow << 16;
   }
-   
- // for(int i = 0; i < 8; i++){
-  //   if(pow_mas[i] == 0 && deff_mas[i] == 0 && !buff){
-  //     result_pow[i] = 0;
-  //   }else if(pow_mas[i] == 0 && deff_mas[i] == 0 && buff){
-  //     result_pow[i] = 1;
-  //     buff = 0;
-  //   }else if(pow_mas[i] == 1 && deff_mas[i] == 0 && !buff){
-  //     result_pow[i] = 1;
-  //   }else if(pow_mas[i] == 0 && deff_mas[i] == 1 && !buff){
-  //     result_pow[i] = 1;
-  //   }else if(pow_mas[i] == 0 && deff_mas[i] == 1 && buff){
-  //     result_pow[i] = 0;
-  //     buff = 0;
-  //   }else if(pow_mas[i] == 1 && deff_mas[i] == 0 && buff){
-  //     result_pow[i] = 0;
-  //     buff = 1;
-  //   }else if(pow_mas[i] == 1 && deff_mas[i] == 1 && buff){
-  //     result_pow[i] = 1;
-  //     buff = 1;
-  //   }else if(pow_mas[i] == 1 && deff_mas[i] == 1 && !buff){
-  //     result_pow[i] = 0;
-  //     buff = 1;
-  //   }
-  // }
 
 }
 
@@ -140,14 +112,8 @@ void s21_mul_ten(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal
 void s21_add_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result){
   int check = 0;
   int buff = 0;
-  result->bits[0] = 0; 
-  result->bits[1] = 0; //= {0, 0, 0, 0, 0, 0, 0 , 0};
-  result->bits[2] = 0; 
-  result->bits[3] = 0; 
-  result->bits[4] = 0; 
-  result->bits[5] = 0;
-  result->bits[6] = 0; 
-  result->bits[7] = 0;
+  memset(result, 0, sizeof(result)); 
+
   for(int i = 0; i <= 255; i++){
     check = s21_get_bit(&value1, i) + s21_get_bit(&value2, i);
     if(check == 0){
