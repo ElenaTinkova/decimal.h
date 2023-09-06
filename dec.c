@@ -28,6 +28,7 @@ int get_scale (s21_decimal num);
 int get_bit(s21_decimal num, int bit);
 s21_decimal set_bit(s21_decimal num, int bit);
 int s21_from_decimal_to_int(s21_decimal src, int *dst);
+int one_in_mantissa(s21_decimal num);
 
 //0 00000000 [00000000 0000001 00001111]
 //вернет 1 если на битном байте стоит 1
@@ -43,7 +44,7 @@ int get_bit_decimal(s21_decimal num, int bit){
 
 void print_decimal(s21_decimal src) {
   for (int i = 127, j = 0; i >= 0; i--) {
-    if (j == 7 || j == 1 || j == 14 ) printf (" ");
+    if (j == 7 || j == 1 || j == 16 ) printf (" ");
     j++;
     printf("%d", get_bit_decimal(src, i));
     if (i % 32 == 0) {
@@ -62,10 +63,23 @@ int get_scale(s21_decimal num){
   for (int i = 16; i < 24; i ++){
     int bit = get_bit_decimal(num, i+3*32);
     rez = rez + pow * bit;
+    pow = pow * 2;
   }
-
   return rez;
 }
+
+int one_in_mantissa(s21_decimal num){
+  int rez = 0;
+  for (int i = 0; i <= 96; i++){
+    if (get_bit_decimal(num,i)){
+     rez = 1;
+     return i; // возвращать индекс для замены или 1 если нашел?
+     break; 
+    }
+  }
+  return rez;
+}
+
 
 void clear_dec(s21_decimal num){
   for(int i = 0; i < 4; i++){
@@ -73,15 +87,6 @@ void clear_dec(s21_decimal num){
   }
 }
 
-// int get_index(int byte){
-//   int index = -1;
-//   for (int i = 0; i != byte; i++){
-//     index++;
-//   }
-//   return index;
-// }
-
-//void shift_left(s21_decimal num, int shift, int n)
 
   // s21_decimal dec(int byte0, int byte1, int byte2, int byte3, int scale){
   //   s21_decimal num = {0};
@@ -132,18 +137,23 @@ void clear_dec(s21_decimal num){
     num.byte[0] = 0b0000000000001111;
     num.byte[1] = 0b0000000000000000;
     num.byte[2] = 0b0000000000000000;
-    num.byte[3] = 0b10000000000000000000000000000000;
-    int number = 93;
+    num.byte[3] = 0b0000000010000000000000000;
+    s21_decimal number = {4};
+    //0,0000015
+    //int number = 93;
     int test = 0b01011101;
     int bit_idnex = 127;
-    print_decimal(num);
-    printf("scale - %d\n", get_scale (num));
+    print_decimal(number);
+    printf("scale - %d\n", get_scale (number));
     printf("sign - %d\n", sign_decimal (num));
     //printf("index - %d\n\n", get_index(bit_idnex));
     printf("bit - %d\n",get_bit_decimal(num, bit_idnex));    
     //printf("get_bit - %d\n", get_bit(num, bit_idnex));
     //printf("set_bit - %d\n", set_bit(num, bit_idnex));
-    printf ("\n%d", s21_from_decimal_to_int(num, &dst));
+    printf ("\nchislo - %d", s21_from_decimal_to_int(number, &dst));
+    printf ("\nmantissa - %d\n", one_in_mantissa(number));
+    print_decimal(number);
+    
     return 0;
   }
 
