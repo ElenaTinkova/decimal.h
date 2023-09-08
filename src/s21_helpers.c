@@ -1,5 +1,6 @@
 #include "s21_decimal.h"
 #include <stdio.h>
+#include <string.h>
 
 //-----------Вывод decimal в консоль-----------//
 void s21_print_decimal(s21_big_decimal *value){
@@ -120,9 +121,15 @@ void s21_add_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_de
       if(buff){
         s21_set_bit(result, i, 1);
         buff = 0;
+      }else{
+        s21_set_bit(result, i, 0);
       }
     }else if(check == 1){
-      s21_set_bit(result, i, 1); 
+      if(buff){
+        s21_set_bit(result, i, 0);
+      }else{
+        s21_set_bit(result, i, 1);
+      }
     }else if(check == 2){
       if(buff){
         s21_set_bit(result, i, 1);
