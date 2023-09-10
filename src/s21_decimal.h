@@ -25,8 +25,9 @@ void s21_levelup_pow(s21_big_decimal *value, int difference_number);
 
 void s21_mul_ten(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result);
 void s21_add_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result);
+void  s21_calculation(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result);
+int s21_add(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result);
 
-int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
