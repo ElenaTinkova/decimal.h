@@ -54,7 +54,7 @@ void print_decimal(s21_decimal src) {
 }
 
 int sign_decimal(s21_decimal sing){
-  return get_bit_decimal(sing, 31);
+  return get_bit_decimal(sing, 127);
 }
 
 int get_scale(s21_decimal num){
@@ -98,15 +98,9 @@ void clear_dec(s21_decimal num){
   //   return num;
   // }
 
-  int get_bit(s21_decimal num, int bit){
-   if (num.byte[0] &(1 << bit)) {
-    return 1;
-  } else
-  return 0;
-}
 
   s21_decimal set_bit(s21_decimal num, int bit){
-    if (!(get_bit(num, bit))){ //1
+    if (!(get_bit_decimal (num, bit))){ //1
       if (num.byte[0] |(1 << bit) ){
         num.byte[0] = (num.byte[0] |(1 << bit) );
         return num;
@@ -128,6 +122,70 @@ void clear_dec(s21_decimal num){
     } else 
       return 1;
   }
+
+  //сравнение
+/*Меньше
+<
+int s21_is_less(s21_decimal, s21_decimal)
+
+Меньше или равно
+<=
+int s21_is_less_or_equal(s21_decimal, s21_decimal)
+
+Больше
+>
+int s21_is_greater(s21_decimal, s21_decimal)
+
+Больше или равно
+>=
+int s21_is_greater_or_equal(s21_decimal, s21_decimal)
+
+Равно
+==
+int s21_is_equal(s21_decimal, s21_decimal)
+
+Не равно
+!=
+int s21_is_not_equal(s21_decimal, s21_decimal)*/
+
+int sravnenie_celogo_polozhitelnogo (s21_decimal num, s21_decimal number){
+  int decimal_1 = 0;
+  int decimal_2 = 0;
+  for (int i = 95; i >= 0; --i) {
+    decimal_1 = s21_get_bit(num, i);
+    decimal_2 = s21_get_bit(number, i);
+    if (decimal_1 > decimal_2) {
+      return 1;
+    } else if (decimal_1 < decimal_2) {
+      return 0;
+    }
+  }
+}
+
+// decimal на -1.
+int otricatelnyi_decimal(s21_decimal value, s21_decimal *result) {
+  if (sign_decimal(value)) {
+    if (get_bit_decimal(value, 127)){
+      !set_bit(value, 127);
+    }
+  return 0;
+  }
+}
+
+void decimal_in_float(s21_decimal num, float *dst){
+  int rez = 0;
+  for (int i = 0; i <= 95; i++) {
+      rez = rez + get_bit_decimal (num, i) * pow(2, i);
+    }
+    rez = rez * pow(10, -get_scale(num));
+    if (sign_decimal) {
+      rez = rez * (-1);
+  }
+  *dst = rez;
+  return dst;
+}
+
+
    // 01011101
    // 00000010
    // 01011111
