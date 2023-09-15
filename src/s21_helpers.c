@@ -113,9 +113,10 @@ void s21_levelup_pow(s21_big_decimal *value, int difference_number) {
 
 //-----------Функция умножения-----------//
 void s21_mul_ten(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result) {
+  memset(result, 0, sizeof(result));
+  
   for (int i = 0; i < 256; i++) {
     int temp = s21_get_bit(&value2, i);
-
     s21_big_decimal vremia = {0, 0, 0, 0, 0, 0, 0, 0};
     if (temp) {
       for (int j = 0; j < 256; j++) {
@@ -164,7 +165,7 @@ void s21_sub_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_de
   int check = 0;
   int buff = 0;
   memset(result, 0, sizeof(result));
-  for(int i = 0; i <= 255; i++){
+  for(int i = 0; i <= 223; i++){
     check = s21_get_bit(&value1, i) - s21_get_bit(&value2, i);
     if(check == 0){
       if(buff){
