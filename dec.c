@@ -29,6 +29,7 @@ int get_bit(s21_decimal num, int bit);
 s21_decimal set_bit(s21_decimal num, int bit);
 int s21_from_decimal_to_int(s21_decimal src, int *dst);
 int one_in_mantissa(s21_decimal num);
+int s21_truncate(s21_decimal value, s21_decimal *result);
 
 //0 00000000 [00000000 0000001 00001111]
 //вернет 1 если на битном байте стоит 1
@@ -152,37 +153,47 @@ int sravnenie_celogo_polozhitelnogo (s21_decimal num, s21_decimal number){
   int decimal_1 = 0;
   int decimal_2 = 0;
   for (int i = 95; i >= 0; --i) {
-    decimal_1 = s21_get_bit(num, i);
-    decimal_2 = s21_get_bit(number, i);
+    decimal_1 = get_bit_decimal (num, i);
+    decimal_2 = get_bit_decimal(number, i);
     if (decimal_1 > decimal_2) {
       return 1;
     } else if (decimal_1 < decimal_2) {
       return 0;
     }
   }
+  return 99;
 }
 
 // decimal на -1.
-int otricatelnyi_decimal(s21_decimal value, s21_decimal *result) {
-  if (sign_decimal(value)) {
-    if (get_bit_decimal(value, 127)){
-      !set_bit(value, 127);
-    }
-  return 0;
-  }
-}
+// int otricatelnyi_decimal(s21_decimal value, s21_decimal *result) {
+//   if (sign_decimal(value)) {
+//     if (get_bit_decimal(value, 127)){
+//       !set_bit(value, 127);
+//     }
+//   return 0;
+//   }
+// }
 
-void decimal_in_float(s21_decimal num, float *dst){
+float decimal_in_float(s21_decimal num, float *dst){
   int rez = 0;
   for (int i = 0; i <= 95; i++) {
       rez = rez + get_bit_decimal (num, i) * pow(2, i);
     }
     rez = rez * pow(10, -get_scale(num));
-    if (sign_decimal) {
+    if (sign_decimal(num)) {
       rez = rez * (-1);
   }
   *dst = rez;
-  return dst;
+  return 0;
+}
+
+int s21_truncate(s21_decimal value, s21_decimal *result){
+  int scale = get_scale(value);
+  float x;
+  float numb = decimal_in_float(value, &x);
+  float number = truncf(x);
+  printf("\ncyfra - %f", x);
+  return number;
 }
 
 
@@ -192,26 +203,25 @@ void decimal_in_float(s21_decimal num, float *dst){
   int main(){
     int dst = 0;
     s21_decimal num;
-    num.byte[0] = 0b0000000000001111;
+    num.byte[0] = 0b0000000001101111;
     num.byte[1] = 0b0000000000000000;
     num.byte[2] = 0b0000000000000000;
-    num.byte[3] = 0b0000000010000000000000000;
+    num.byte[3] = 0b10000001000000000000000000000000;
     s21_decimal number = {4};
     //0,0000015
     //int number = 93;
     int test = 0b01011101;
     int bit_idnex = 127;
-    print_decimal(number);
-    printf("scale - %d\n", get_scale (number));
+    print_decimal(num);
+    printf("scale - %d\n", get_scale (num));
     printf("sign - %d\n", sign_decimal (num));
     //printf("index - %d\n\n", get_index(bit_idnex));
     printf("bit - %d\n",get_bit_decimal(num, bit_idnex));    
     //printf("get_bit - %d\n", get_bit(num, bit_idnex));
     //printf("set_bit - %d\n", set_bit(num, bit_idnex));
-    printf ("\nchislo - %d", s21_from_decimal_to_int(number, &dst));
-    printf ("\nmantissa - %d\n", one_in_mantissa(number));
-    print_decimal(number);
-    
+    printf ("\nchislo - %d", s21_from_decimal_to_int(num, &dst));
+    printf("\ntruncate - %d\n", s21_truncate(num, &num));
+
     return 0;
   }
 
