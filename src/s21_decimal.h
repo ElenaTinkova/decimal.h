@@ -29,17 +29,17 @@ void s21_mul_ten(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal
 void s21_add_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result);
 void s21_sub_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result);
 
-int s21_add(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result);
-int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
-int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
+int s21_add(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result); //переделать пототм
+int s21_sub(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result); //переделать пототм
+int s21_mul(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result); //переделать пототм
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 
-int s21_is_less(s21_decimal, s21_decimal);
-int s21_is_less_or_equal(s21_decimal, s21_decimal);
-int s21_is_greater(s21_decimal, s21_decimal);
-int s21_is_greater_or_equal(s21_decimal, s21_decimal);
-int s21_is_equal(s21_decimal, s21_decimal);
-int s21_is_not_equal(s21_decimal, s21_decimal);
+int s21_is_less(s21_big_decimal value_1, s21_big_decimal value_2); // переделать потом 
+int s21_is_less_or_equal(s21_big_decimal value_1, s21_big_decimal value_2); // переделать потом 
+int s21_is_greater(s21_big_decimal value_1, s21_big_decimal value_2); //переделать пототм
+int s21_is_greater_or_equal(s21_big_decimal value_1, s21_big_decimal value_2); //переделать пототм
+int s21_is_equal(s21_big_decimal value_1, s21_big_decimal value_2);
+int s21_is_not_equal(s21_big_decimal value_1, s21_big_decimal value_2);
 
 int s21_floor(s21_decimal value, s21_decimal *result);
 int s21_from_float_to_decimal(float src, s21_decimal *dst);

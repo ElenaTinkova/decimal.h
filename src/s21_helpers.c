@@ -90,8 +90,11 @@ int s21_difference_pow(s21_big_decimal *value1, s21_big_decimal *value2) {
   // if return 0 ? степени одинаковые
   // if return > 0 ? степень value1 больше, чем value2 в return раз
   // if return < 0 ? степень value1 меньше, чем value2 в return раз
-
-  return (s21_get_pow(value1)) - (s21_get_pow(value2));
+  int result = 0;
+  if((s21_get_pow(value1)) - (s21_get_pow(value2)) != 0){
+    result = s21_get_pow(value1) - s21_get_pow(value2) + 1; //+1(включая степень, которую мы имеем)
+  }
+  return result;
 }
 
 //-----------Увеличение степени на n раз-----------//
@@ -115,16 +118,16 @@ void s21_levelup_pow(s21_big_decimal *value, int difference_number) {
 void s21_mul_ten(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result) {
   memset(result, 0, sizeof(result));
   
-  for (int i = 0; i < 256; i++) {
-    int temp = s21_get_bit(&value2, i);
-    s21_big_decimal vremia = {0, 0, 0, 0, 0, 0, 0, 0};
+  for (int i = 0; i <= 223; i++) {
+    int temp = s21_get_bit(&value2, i); //бит второго множителя
+    s21_big_decimal vremia = {0, 0, 0, 0, 0, 0, 0, 0}; //временный децимал для сложения в результат
     if (temp) {
-      for (int j = 0; j < 256; j++) {
-        if (s21_get_bit(&value1, j)) {
-          s21_set_bit(&vremia, i + j, 1);
+      for (int j = 0; j <= 223; j++) {
+        if (s21_get_bit(&value1, j)) { //если бит первого множителя равен 1
+          s21_set_bit(&vremia, i + j, 1); //запись 1 со смещением
         }
       }
-      s21_add_function(vremia, *result, result);
+      s21_add_function(vremia, *result, result); //сложение результата умножения каждого разряда
     }
   }
 }
@@ -132,7 +135,7 @@ void s21_mul_ten(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal
 //-----------Функция сложения-----------//
 void s21_add_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result) {
   int check = 0;
-  int buff = 0;
+  int buff = 0; //то что в уме)))
   memset(result, 0, sizeof(result));
   for (int i = 0; i <= 223; i++) {
     check = s21_get_bit(&value1, i) + s21_get_bit(&value2, i);
