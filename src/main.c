@@ -2,21 +2,21 @@
 #include "s21_decimal.h"
 
 int main(){
-    s21_big_decimal dec = {5,0,0,0,0,0,0,0};
-    s21_big_decimal dec2 = {3,0,0,0,0,0,0,0};
-    s21_big_decimal res = {0,0,0,0,0,0,0,0};
+    s21_decimal dec = {5,0,0,0};
+    s21_decimal dec2 = {3,0,0,0};
+    s21_decimal res = {0,0,0,0};
 
-    s21_set_pow(&dec, 3);
-    s21_set_pow(&dec2, 1);
+    // s21_set_pow(&dec, 3);
+    // s21_set_pow(&dec2, 1);
 
     // s21_set_sign(&dec, 0);
     // s21_set_sign(&dec2, 0);
     
-    printf("\n***** DECIMAL 1 *****\n\n");
-    s21_print_decimal(&dec);
+    // printf("\n***** DECIMAL 1 *****\n\n");
+    // s21_print_decimal(&dec);
 
-    printf("\n***** DECIMAL 2 *****\n\n");
-    s21_print_decimal(&dec2);
+    // printf("\n***** DECIMAL 2 *****\n\n");
+    // s21_print_decimal(&dec2);
     
     //5 + 3 ok
     //3 + 5 ok

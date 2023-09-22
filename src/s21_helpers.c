@@ -4,7 +4,22 @@
 #include "s21_decimal.h"
 
 //-----------Вывод decimal в консоль-----------//
-void s21_print_decimal(s21_big_decimal *value) {
+void s21_print_decimal(s21_decimal *value) {
+  int size_decimal = sizeof(s21_decimal) / 4 - 1;  //Кол-во bits в структуре
+  for (int i = size_decimal; i >= 0; i--) {  //Цикл bits
+    // printf("bits[%d] ", i);
+    for (int j = 31; j >= 0; j--) {  //Цикл byte в bits
+      if (value->bits[i] & (1 << j)) {
+        printf("1");
+      } else {
+        printf("0");
+      }
+    }
+    printf("\n");
+  }
+}
+
+void s21_print_big_decimal(s21_big_decimal *value) {
   int size_decimal = sizeof(s21_big_decimal) / 4 - 1;  //Кол-во bits в структуре
   for (int i = size_decimal; i >= 0; i--) {  //Цикл bits
     // printf("bits[%d] ", i);
@@ -192,4 +207,9 @@ void s21_sub_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_de
       }
     }
   }
+}
+
+s21_big_decimal s21_enlarge_D(s21_decimal number) {
+    s21_big_decimal res = {number.bits[0], number.bits[1], number.bits[2], 0 ,0, 0, 0, number.bits[3]};
+    return res;
 }
