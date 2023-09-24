@@ -19,6 +19,7 @@ void s21_print_decimal(s21_decimal *value) {
   }
 }
 
+//-----------Вывод big decimal в консоль-----------//
 void s21_print_big_decimal(s21_big_decimal *value) {
   int size_decimal = sizeof(s21_big_decimal) / 4 - 1;  //Кол-во bits в структуре
   for (int i = size_decimal; i >= 0; i--) {  //Цикл bits
@@ -209,7 +210,55 @@ void s21_sub_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_de
   }
 }
 
+//-----------Функция деления на 10-----------//
+void s21_div_ten(s21_big_decimal *value){
+    int ten = 10; //делитель
+    unsigned long int rem = 0; //остаток
+    unsigned long int x = 0;
+    for (int i = 6; i >= 0; --i) {
+        x = value->bits[i];
+        x += rem << 32;
+        rem = x % ten;
+        x /= ten;
+        value->bits[i] = x;
+    }
+}
+
+//-----------Функция перевода из decimal в big decimal-----------//
 s21_big_decimal s21_enlarge_D(s21_decimal number) {
     s21_big_decimal res = {number.bits[0], number.bits[1], number.bits[2], 0 ,0, 0, 0, number.bits[3]};
     return res;
+}
+
+//-----------Функция перевода из big decimal в decimal-----------//
+s21_decimal s21_cut_D(s21_big_decimal number) {
+    s21_decimal res = {number.bits[0], number.bits[1], number.bits[2], number.bits[7]};
+    return res;
+}
+
+//-----------Функция переполнение мантиссы-----------//
+int s21_overflow(s21_big_decimal *value){
+  int flag = 0; //error flag
+  for(int i = 3; i < 7; i++){
+    int bits = value->bits[i];
+    if(bits > 0){
+      while(bits > 0){
+        if(s21_get_pow(value) < 28){
+          s21_div_ten(value);
+          s21_levelup_pow(value, 1);
+        }else{
+          break;
+          if(!s21_get_sign(value)){
+            flag = 1;
+          }else{
+            flag = 2;
+          }
+          
+        }
+        bits = value->bits[i];
+      }
+    }
+  }
+
+  return flag;
 }

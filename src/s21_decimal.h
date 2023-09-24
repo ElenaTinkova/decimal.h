@@ -26,14 +26,17 @@ void s21_levelup_pow(s21_big_decimal *value, int difference_number);
 int s21_difference_pow(s21_big_decimal *value1, s21_big_decimal *value2);
 void s21_set_pow(s21_big_decimal *value, int pow_value);
 s21_big_decimal s21_enlarge_D(s21_decimal number);
+s21_decimal s21_cut_D(s21_big_decimal number);
+void s21_div_ten(s21_big_decimal *value);
+int s21_overflow(s21_big_decimal *value);
 
 void s21_mul_ten(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result);
 void s21_add_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result);
 void s21_sub_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result);
 
-int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result); //переделать пототм
-int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result); //переделать пототм
-int s21_mul(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result); //переделать пототм
+int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
+int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result); 
+int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result); 
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 
 int s21_is_less(s21_big_decimal value_1, s21_big_decimal value_2); // переделать потом 
@@ -44,6 +47,7 @@ int s21_is_equal(s21_big_decimal value_1, s21_big_decimal value_2);
 int s21_is_not_equal(s21_big_decimal value_1, s21_big_decimal value_2);
 
 int s21_floor(s21_decimal value, s21_decimal *result);
+int s21_negate(s21_decimal value, s21_decimal *result);
 int s21_from_float_to_decimal(float src, s21_decimal *dst);
 int s21_from_decimal_to_int(s21_decimal src, int *dst);
 int s21_from_decimal_to_float(s21_decimal src, float *dst);

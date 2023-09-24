@@ -2,9 +2,11 @@
 #include <stdio.h>
 
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
+  int error = 0; //Код ошибки
   s21_big_decimal value1 = s21_enlarge_D(value_1);
   s21_big_decimal value2 = s21_enlarge_D(value_2);
   s21_big_decimal result1 = s21_enlarge_D(*result);
+
   // Проверка степени перед операцией сложения
   int size_decimal = sizeof(s21_big_decimal) / 4 - 1; //bits где лежит степень
   
@@ -54,6 +56,13 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     s21_add_function(value2, value1, &result1);
     s21_set_sign(&result1, 1);
   }
-  s21_print_big_decimal(&result1);
-  return 1;
+
+  //Проверка на переполнение мантиссы
+  int check = s21_overflow(&result1);
+  if(!check){
+    *result = s21_cut_D(result1);
+  }
+  error = check; //Присвоение вывод overflow к error переменной
+
+  return error;
 }
