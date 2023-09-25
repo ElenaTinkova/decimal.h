@@ -74,9 +74,9 @@ void s21_set_sign(s21_big_decimal *value, int bit) {
 //-----------Получение степени decimal-----------//
 int s21_get_pow(s21_big_decimal *value) {
   int size_decimal = sizeof(s21_big_decimal) / 4 - 1;
-  int pow;
+  int pow = 0;
   if (s21_get_sign(value)) {
-    pow = (value->bits[size_decimal] ^ MASK_MINUS) >> 16;
+    pow = (value->bits[size_decimal] ^ MASK_MINUS) >> 16 ;
   } else {
     pow = value->bits[size_decimal] >> 16;
   }
@@ -87,18 +87,19 @@ int s21_get_pow(s21_big_decimal *value) {
 void s21_set_pow(s21_big_decimal *value, int pow_value) {
   int size_decimal = sizeof(s21_big_decimal) / 4 - 1;
   int pow;
-  if (s21_get_sign(value)) {
+  int sign = s21_get_sign(value);
+  if (sign) {
     pow = (value->bits[size_decimal] ^ MASK_MINUS) >> 16;
     pow = pow_value;
     pow = pow_value << 16;
-    s21_set_sign(value, 1);
+    // s21_set_sign(value, 1);
   } else {
     pow = value->bits[size_decimal] >> 16;
     pow = pow_value;
     pow = pow_value << 16;
   }
-
   value->bits[size_decimal] = pow;
+  if (sign) s21_set_sign(value, 1);
 }
 
 //-----------Разница степеней decimal-----------//
@@ -106,11 +107,16 @@ int s21_difference_pow(s21_big_decimal *value1, s21_big_decimal *value2) {
   // if return 0 ? степени одинаковые
   // if return > 0 ? степень value1 больше, чем value2 в return раз
   // if return < 0 ? степень value1 меньше, чем value2 в return раз
-  int result = 0;
-  if((s21_get_pow(value1)) - (s21_get_pow(value2)) != 0){
-    result = s21_get_pow(value1) - s21_get_pow(value2) + 1; //+1(включая степень, которую мы имеем)
-  }
-  return result;
+  // int result = 0;
+  int dif = (s21_get_pow(value1)) - (s21_get_pow(value2));
+  // if(dif != 0){
+  //   if (dif > 0) {
+  //     result = dif + 1; // +1(включая степень, которую мы имеем)
+  //   } else {
+      // result = dif; // -1(включая степень, которую мы имеем)
+    // }
+  // }
+  return dif;
 }
 
 //-----------Увеличение степени на n раз-----------//
@@ -240,25 +246,23 @@ s21_decimal s21_cut_D(s21_big_decimal number) {
 int s21_overflow(s21_big_decimal *value){
   int flag = 0; //error flag
   for(int i = 3; i < 7; i++){
-    int bits = value->bits[i];
+    unsigned int bits = value->bits[i];
     if(bits > 0){
       while(bits > 0){
         if(s21_get_pow(value) < 28){
           s21_div_ten(value);
           s21_levelup_pow(value, 1);
         }else{
-          break;
           if(!s21_get_sign(value)){
             flag = 1;
           }else{
             flag = 2;
           }
-          
+          break; 
         }
         bits = value->bits[i];
       }
     }
   }
-
   return flag;
 }
