@@ -30,7 +30,7 @@ s21_decimal set_bit(s21_decimal num, int bit);
 int s21_from_decimal_to_int(s21_decimal src, int *dst);
 int one_in_mantissa(s21_decimal num);
 int s21_truncate(s21_decimal value, s21_decimal *result);
-float decimal_in_float(s21_decimal num, float *dst);
+int decimal_in_float(s21_decimal num, float *dst);
 int s21_round(s21_decimal value, s21_decimal *result);
 
 //0 00000000 [00000000 0000001 00001111]
@@ -115,15 +115,24 @@ void clear_dec(s21_decimal num){
   }
 
   int s21_from_decimal_to_int(s21_decimal src, int *dst){
+    int error = 0;
     int sign = get_bit_decimal(src, 127);
     int sign1 = get_bit_decimal(src, 31);
+    int scale = get_scale(src);
+    double rez = src.byte[0] / pow(10, scale);
     if (src.byte[0] <= INT_MAX){
       *dst = src.byte[0];
       if (sign || sign1){
         *dst *= -1;
-      } return *dst;
-    } else 
-      return 0;
+      }   
+  } else error = 1;
+  if (src.byte[1] || src.byte[2]){
+    error = 1;
+  }
+  if((scale) > 0){
+    *dst = trunc(rez);
+  }
+  return error;
   }
 
 
@@ -142,19 +151,9 @@ int sravnenie_celogo_polozhitelnogo (s21_decimal num, s21_decimal number){
   return 99;
 }
 
-// decimal на -1.
-// int otricatelnyi_decimal(s21_decimal value, s21_decimal *result) {
-//   if (sign_decimal(value)) {
-//     if (get_bit_decimal(value, 127)){
-//       !set_bit(value, 127);
-//     }
-//   return 0;
-//   }
-// }
 
-float decimal_in_float(s21_decimal num, float *dst){
+int decimal_in_float(s21_decimal num, float *dst){
   float rez = 0;
-  int znak = 0;
   for (int i = 0; i <= 95; i++) {
       rez = rez + get_bit_decimal (num, i) * pow(2, i);
     }
@@ -162,46 +161,28 @@ float decimal_in_float(s21_decimal num, float *dst){
     if (sign_decimal(num)) {
       rez = rez * (-1);
   }
-  while (znak != 7){
-    rez /= 10;
-    znak++;
-  }
-  return rez;
-}
-// vydat' oshibku esli bolshe 7 znakov
-//2.55 / 100
-int s21_truncate(s21_decimal value, s21_decimal *result){
-  float x = 0.;
-  float numb = decimal_in_float(value, &x);
-  int number = trunc(numb);
-  printf("\nnumber - %d     %d\n", numb, number);
+    if ((fabs(*dst) < 1e-28) && (fabs(*dst) > 0)) {
+    return 1;
+    }
+    *dst = rez;
+    printf("float - %f", *dst);
+    
   return 0;
 }
 
-//Округляет Decimal до ближайшего целого числа.
-int s21_round(s21_decimal value, s21_decimal *result){
-  float x = 0;
-  float numb = decimal_in_float(value, &x);
-  int number = round(numb);
-  printf("\n round number - %d    %d\n", numb, number);
-  return 0;
-}
 
-   // 01011101
-   // 00000010
-   // 01011111
   int main(){
     int dst = 0;
     float dst_float = 0.;
     s21_decimal num;
-    num.byte[0] = 0b1000000000000001;
-    num.byte[1] = 0b1000000000000001;
+    num.byte[0] = 0b1111111111111111;
+    num.byte[1] = 0b0000000000000000;
     num.byte[2] = 0b0000000000000000;
-    num.byte[3] = 0b10000000000000000000000000000000;
-    s21_decimal number = {4};
+    num.byte[3] = 0b0000000000000100000000000000000;
+    //s21_decimal number = {4};
     //0,0000015
     //int number = 93;
-    int test = 0b01011101;
+    //int test = 0b01011101;
     int bit_idnex = 127;
     print_decimal(num);
     printf("scale - %d\n", get_scale (num));
@@ -211,12 +192,7 @@ int s21_round(s21_decimal value, s21_decimal *result){
     //printf("get_bit - %d\n", get_bit(num, bit_idnex));
     //printf("set_bit - %d\n", set_bit(num, bit_idnex));
     printf ("\ndec to int - %d", s21_from_decimal_to_int(num, &dst));
-
-    printf("\ndec to float - %f\n", decimal_in_float (num, &dst_float));
-    printf("\ntruncate - %d\n", s21_truncate(num, &num));
-    printf("\nround - %d\n",s21_round(num, &num));
-    
-
+    printf("\ndec to float - %d\n", decimal_in_float (num, &dst_float));
+    //printf("\nround - %d\n",s21_round(num, &num));
     return 0;
   }
-
