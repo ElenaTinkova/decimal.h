@@ -61,7 +61,7 @@ int s21_get_sign(s21_big_decimal *value) {
   return check_sign;
 }
 
-//-----------Изменение знака decimal-----------//
+//-----------Изменение знака big decimal-----------//
 void s21_set_sign(s21_big_decimal *value, int bit) {
   int size_decimal = sizeof(s21_big_decimal) / 4 - 1;  //Кол-во bits в структуре
   if (bit) {
