@@ -200,6 +200,7 @@ void s21_sub_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_de
       }
     }
   }
+
 }
 
 //-----------Функция деления на 10-----------//
@@ -467,16 +468,17 @@ int s21_sub_big(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decima
   } else if (sign1 && sign2) { // если оба отрицательные
     int vvs = s21_is_big_greater(value_1, value_2);
     if(vvs){
+      s21_sub_function(value_2, value_1, result);
+    }else{
       s21_sub_function(value_1, value_2, result);
       s21_set_big_sign(result, 1);
-    }else{
-      s21_sub_function(value_2, value_1, result);
     }
   }
   return 0;
 }
 
 int s21_big_div(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result) {
+  
   s21_big_decimal temp = {0};
   s21_big_decimal diff = {0};
   
