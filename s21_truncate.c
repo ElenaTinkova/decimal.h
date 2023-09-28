@@ -13,14 +13,14 @@ int s21_truncate(s21_decimal value, s21_decimal *result){
         result->bits[i] = 0;
     }
 
-    if(s21_get_pow(&value1)){ //Если есть степень
+    if(s21_get_big_pow(&value1)){ //Если есть степень
         result1 = value1; //Приравниваем decimal к результату
-        int value_pow = s21_get_pow(&result1); //Значение степени 
+        int value_pow = s21_get_big_pow(&result1); //Значение степени 
         while(value_pow){ 
             s21_div_ten(&result1); 
             value_pow--;
         }
-        s21_set_pow(&result1, 0); //Зануление степени в результате
+        s21_set_big_pow(&result1, 0); //Зануление степени в результате
         *result = s21_cut_D(result1); //Перевод из big decimal в decimal
 
     }else{

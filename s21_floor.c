@@ -19,19 +19,9 @@ int s21_floor(s21_decimal value, s21_decimal *result) {
     s21_decimal res = {3,0,0,0b10000000000000000000000000000000};
 
     //Если число отрицательное     и   число decimal без дробной части не равно числу с дробной
-    if(s21_get_sign(&value1) && s21_is_not_equal(value1, result1)){
+    if(s21_get_big_sign(&value1) && !(s21_is_big_equal(value1, result1))){
         s21_sub(res, dec_for_sub, &res);
     }
-    printf("\n\n");
-    s21_print_decimal(&res);
-    
-
-    //3 -> 3
-    //3.3 -> 3
-    //4.8 -> 4
-    //-3.3 -> -4
-    //-3.8 -> -4
-    //-3 -> -3
 
     return 0;
 }

@@ -7,7 +7,6 @@
 void s21_print_decimal(s21_decimal *value) {
   int size_decimal = sizeof(s21_decimal) / 4 - 1;  //Кол-во bits в структуре
   for (int i = size_decimal; i >= 0; i--) {  //Цикл bits
-    // printf("bits[%d] ", i);
     for (int j = 31; j >= 0; j--) {  //Цикл byte в bits
       if (value->bits[i] & (1 << j)) {
         printf("1");
@@ -74,7 +73,7 @@ void s21_set_big_sign(s21_big_decimal *value, int bit) {
 int s21_get_big_pow(s21_big_decimal *value) {
   int size_decimal = sizeof(s21_big_decimal) / 4 - 1;
   int pow = 0;
-  if (s21_get_sign(value)) {
+  if (s21_get_big_sign(value)) {
     pow = (value->bits[size_decimal] ^ MASK_MINUS) >> 16 ;
   } else {
     pow = value->bits[size_decimal] >> 16;
@@ -125,7 +124,7 @@ void s21_levelup_big_pow(s21_big_decimal *value, int difference_number) {
 
 //-----------Функция умножения-----------//
 void s21_mul_ten_big(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result) {
-  memset(result, 0, sizeof(result));
+  memset(result, 0, sizeof(s21_big_decimal));
   
   for (int i = 0; i <= 223; i++) {
     int temp = s21_get_big_bit(&value2, i); //бит второго множителя
@@ -145,27 +144,27 @@ void s21_mul_ten_big(s21_big_decimal value1, s21_big_decimal value2, s21_big_dec
 void s21_add_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result) {
   int check = 0;
   int buff = 0; //то что в уме)))
-  memset(result, 0, sizeof(result));
+  memset(result, 0, sizeof(s21_big_decimal));
   for (int i = 0; i <= 223; i++) {
-    check = s21_get_bit(&value1, i) + s21_get_bit(&value2, i);
+    check = s21_get_big_bit(&value1, i) + s21_get_big_bit(&value2, i);
     if (check == 0) {
       if (buff) {
-        s21_set_bit(result, i, 1);
+        s21_set_big_bit(result, i, 1);
         buff = 0;
       } else {
-        s21_set_bit(result, i, 0);
+        s21_set_big_bit(result, i, 0);
       }
     } else if (check == 1) {
       if (buff) {
-        s21_set_bit(result, i, 0);
+        s21_set_big_bit(result, i, 0);
       } else {
-        s21_set_bit(result, i, 1);
+        s21_set_big_bit(result, i, 1);
       }
     } else if (check == 2) {
       if (buff) {
-        s21_set_bit(result, i, 1);
+        s21_set_big_bit(result, i, 1);
       } else {
-        s21_set_bit(result, i,0);
+        s21_set_big_bit(result, i,0);
         buff = 1;
       }
     }
@@ -176,7 +175,7 @@ void s21_add_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_de
 void s21_sub_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result) {
   int check = 0;
   int buff = 0;
-  memset(result, 0, sizeof(result));
+  memset(result, 0, sizeof(s21_big_decimal));
   for(int i = 0; i <= 223; i++){
     check = s21_get_big_bit(&value1, i) - s21_get_big_bit(&value2, i);
     if(check == 0){
@@ -258,13 +257,13 @@ int s21_add_big_decimal(s21_big_decimal value_1, s21_big_decimal value_2, s21_bi
   // Проверка степени перед операцией сложения
   int size_decimal = sizeof(s21_big_decimal) / 4 - 1; //bits где лежит степень
   
-  int dif = s21_difference_pow(&value_1, &value_2);  // dif > 0 = value_1 > value_2; dif < 0 = value_2 > value_1;
+  int dif = s21_difference_big_pow(&value_1, &value_2);  // dif > 0 = value_1 > value_2; dif < 0 = value_2 > value_1;
   if (dif != 0) {
     while (dif != 0) {
       s21_big_decimal ten = {{10, 0, 0, 0, 0, 0, 0, 0}};
       if (dif > 0) { 
         s21_levelup_big_pow(&value_2, 1); //увеличение степени на 1 второго децимал
-        s21_mul_ten(value_2, ten, &value_2); //умножение мантиссы на 10
+        s21_mul_ten_big(value_2, ten, &value_2); //умножение мантиссы на 10
         dif--;
        }else if(dif < 0){
          s21_levelup_big_pow(&value_1, 1); //увеличение степени на 1 первого децимал
@@ -282,7 +281,7 @@ int s21_add_big_decimal(s21_big_decimal value_1, s21_big_decimal value_2, s21_bi
     s21_add_function(value_1, value_2, result);
   } else if (sign1 && !sign2) { // если первый знак -
     s21_set_big_sign(&value_1, 0);
-    int vvs = s21_is_greater_big(value_1, value_2); //первое значение больше второго?
+    int vvs = s21_is_big_greater(value_1, value_2); //первое значение больше второго?
     if(vvs){
       s21_sub_function(value_1, value_2, result);
       s21_set_big_sign(result, 1);
@@ -291,7 +290,7 @@ int s21_add_big_decimal(s21_big_decimal value_1, s21_big_decimal value_2, s21_bi
     }
   } else if (!sign1 && sign2) { // если второй знак -
     s21_set_big_sign(&value_2, 0);
-    int vvs = s21_is_greater_big(value_1, value_2);
+    int vvs = s21_is_big_greater(value_1, value_2);
     if(vvs){
       s21_sub_function(value_1, value_2, result);
     }else{
@@ -308,17 +307,16 @@ int s21_add_big_decimal(s21_big_decimal value_1, s21_big_decimal value_2, s21_bi
   return 1;
 }
 
-int s21_is_greater_big(s21_big_decimal value_1, s21_big_decimal value_2) {
+int s21_is_big_greater(s21_big_decimal value_1, s21_big_decimal value_2) {
     // Проверка степени
     int flag = 0;
-    int size_decimal = sizeof(s21_big_decimal) / 4 - 1; //bits где лежит степень
-    int dif = s21_difference_pow(&value_1, &value_2);  // dif > 0 = value_1 > value_2; dif < 0 = value_2 > value_1;
+    int dif = s21_difference_big_pow(&value_1, &value_2);  // dif > 0 = value_1 > value_2; dif < 0 = value_2 > value_1;
   
     if (dif != 0) {
         while (dif != 0) {
         s21_big_decimal ten = {10, 0, 0, 0, 0, 0, 0, 0};
         if (dif > 0) { 
-            s21_levelup_pow(&value_2, 1);
+            s21_levelup_big_pow(&value_2, 1);
             s21_mul_ten_big(value_2, ten, &value_2);
             dif--;
         }else if(dif < 0){
@@ -379,7 +377,6 @@ int s21_is_big_equal(s21_big_decimal value_1, s21_big_decimal value_2) {
 
 int s21_is_big_less(s21_big_decimal value_1, s21_big_decimal value_2) {
   int flag = 0;
-  int size_decimal = sizeof(s21_big_decimal) / 4 - 1; //bits где лежит степень
   int dif = s21_difference_big_pow(&value_1, &value_2);  // dif > 0 = value_1 > value_2; dif < 0 = value_2 > value_1;
   
   if (dif != 0) {
@@ -454,26 +451,26 @@ int s21_sub_big(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decima
   if (!sign1 && !sign2) { //если оба знака +
     int vvs = s21_is_big_greater(value_1, value_2);
     if(vvs){
-      s21_sub_function(value_1, value_2, &result);
+      s21_sub_function(value_1, value_2, result);
     }else{
-      s21_sub_function(value_2, value_1, &result);
-      s21_set_big_sign(&result, 1);
+      s21_sub_function(value_2, value_1, result);
+      s21_set_big_sign(result, 1);
     }
   } else if (sign1 && !sign2) { // если первый знак -
     s21_set_big_sign(&value_1, 0);
-    s21_add_big_decimal(value_1, value_2, &result);
-    s21_set_big_sign(&result, 1);
+    s21_add_big_decimal(value_1, value_2, result);
+    s21_set_big_sign(result, 1);
   } else if (!sign1 && sign2) { // если второй знак -
     s21_set_big_sign(&value_2, 0);
-    s21_add_big_decimal(value_1,value_2,&result);
-    s21_set_big_sign(&result, 0);
+    s21_add_big_decimal(value_1,value_2, result);
+    s21_set_big_sign(result, 0);
   } else if (sign1 && sign2) { // если оба отрицательные
     int vvs = s21_is_big_greater(value_1, value_2);
     if(vvs){
-      s21_sub_function(value_1, value_2, &result);
-      s21_set_big_sign(&result, 1);
+      s21_sub_function(value_1, value_2, result);
+      s21_set_big_sign(result, 1);
     }else{
-      s21_sub_function(value_2, value_1, &result);
+      s21_sub_function(value_2, value_1, result);
     }
   }
   return 0;
@@ -482,9 +479,9 @@ int s21_sub_big(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decima
 int s21_big_div(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result) {
   s21_big_decimal temp = {0};
   s21_big_decimal diff = {0};
-  s21_big_decimal res = {0};
-  int val1_sign = s21_get_bit(&value_1, 255);
-  int val2_sign = s21_get_bit(&value_2, 255);
+  
+  // int val1_sign = s21_get_big_bit(&value_1, 255);
+  // int val2_sign = s21_get_big_bit(&value_2, 255);
   // изменить знаки
   // проверить и записать степени
   // добавить проверку на 0
@@ -502,7 +499,7 @@ int s21_big_div(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decima
               diff = temp;
           }
       }
-      s21_set_bit(result, bit_num_result, 1);
+      s21_set_big_bit(result, bit_num_result, 1);
       s21_sub_big(value_1, diff, &value_1);
   }
   // дополнить result знаком

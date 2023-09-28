@@ -2,10 +2,12 @@
 #include "s21_decimal.h"
 
 int main(){
-    s21_big_decimal dec = {5,0,0,0,0,0,0,0};
-    s21_big_decimal dec2 = {5,0,0,0,0,0,0,0};
-    s21_big_decimal res = {0,0,0,0,0,0,0,0};
+    s21_decimal dec = {{5,0,0,0}};
+    s21_decimal dec2 = {{5,0,0,0}};
+    s21_decimal res = {{0,0,0,0,}};
     
+    s21_sub(dec, dec2, &res);
+
     printf("\n***** DECIMAL 1 *****\n\n");
     s21_print_decimal(&dec);
 
