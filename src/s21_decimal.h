@@ -75,5 +75,6 @@ int s21_sub_big(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decima
 int s21_big_div(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result);
 void s21_shift_left_big_decimal(s21_big_decimal *value);
 int s21_is_zero(s21_big_decimal decimal);
+void s21_normalization(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result);
 
 #endif
