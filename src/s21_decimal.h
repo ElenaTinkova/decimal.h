@@ -58,13 +58,13 @@ int s21_is_not_equal(s21_decimal value_1, s21_decimal value_2); //+
 //Преобразователи
 int s21_from_int_to_decimal(int src, s21_decimal *dst); //+
 // int s21_from_float_to_decimal(float src, s21_decimal *dst);
-int s21_from_decimal_to_int(s21_decimal src, int *dst);
-int s21_from_decimal_to_float(s21_decimal src, float *dst);
+int s21_from_decimal_to_int(s21_decimal src, int *dst); //+
+int s21_from_decimal_to_float(s21_decimal src, float *dst); //+
 
 //Другие функции
-int s21_floor(s21_decimal value, s21_decimal *result);
-int s21_negate(s21_decimal value, s21_decimal *result);
-int s21_truncate(s21_decimal value, s21_decimal *result);
+int s21_floor(s21_decimal value, s21_decimal *result); //+
+int s21_negate(s21_decimal value, s21_decimal *result); //+
+int s21_truncate(s21_decimal value, s21_decimal *result); //+
 // int s21_round(s21_decimal value, s21_decimal *result);
 
 int s21_add_big_decimal(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result);
