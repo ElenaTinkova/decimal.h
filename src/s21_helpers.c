@@ -511,25 +511,25 @@ int s21_big_div(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decima
 
   int val1_scale = s21_get_big_pow(&value_1), val2_scale = s21_get_big_pow(&value_2);
   int res_scale = val1_scale - val2_scale;
-  
-  while (!s21_is_big_greater(value_2, value_1)) {
-      int compare = s21_is_big_greater(value_1, value_2);
-      uint8_t bit_num_result = 0; // номер бита в result, на который нужно установить значение 1
-      diff = value_2; //времен. делитель
-      while (compare) {
-          temp = diff; // подгоняем вр.делитель под вычитание из делимого
-          s21_shift_left_big_decimal(&temp); // сдвигаем
-          compare = (s21_is_big_greater(value_1, temp) || (s21_is_big_equal(value_1, temp))) ? 1 : 0; // достигаем макс значения для вычитания
-          if (compare) {
-              bit_num_result++; // сколько раз можно вычесть 
-              diff = temp;
-          }
-      }
-      s21_set_big_bit(result, bit_num_result, 1);
-      s21_sub_big(value_1, diff, &value_1);
-  }
-  if (val1_sign != val2_sign) s21_set_big_sign(result, 1);
-  s21_set_big_pow(result, res_scale);
+  s21_normalization(value_1, value_2, result);
+  // while (!s21_is_big_greater(value_2, value_1)) {
+  //     int compare = s21_is_big_greater(value_1, value_2);
+  //     uint8_t bit_num_result = 0; // номер бита в result, на который нужно установить значение 1
+  //     diff = value_2; //времен. делитель
+  //     while (compare) {
+  //         temp = diff; // подгоняем вр.делитель под вычитание из делимого
+  //         s21_shift_left_big_decimal(&temp); // сдвигаем
+  //         compare = (s21_is_big_greater(value_1, temp) || (s21_is_big_equal(value_1, temp))) ? 1 : 0; // достигаем макс значения для вычитания
+  //         if (compare) {
+  //             bit_num_result++; // сколько раз можно вычесть 
+  //             diff = temp;
+  //         }
+  //     }
+  //     s21_set_big_bit(result, bit_num_result, 1);
+  //     s21_sub_function(value_1, diff, &value_1);
+  // }
+  // if (val1_sign != val2_sign) s21_set_big_sign(result, 1);
+  // s21_set_big_pow(result, res_scale);
   return 0;
 } 
 
@@ -562,10 +562,12 @@ void s21_normalization(s21_big_decimal value_1, s21_big_decimal value_2, s21_big
         s21_levelup_big_pow(&value_2, 1);
         s21_mul_ten_big(value_2, ten, &value_2);
         dif--;
+        value_2.bits[size_decimal] = value_1.bits[size_decimal];;
        }else if(dif < 0){
-         s21_levelup_big_pow(&value_1, 1);
-         s21_mul_ten_big(value_1, ten, &value_1);
-         dif++;
+        s21_levelup_big_pow(&value_1, 1);
+        s21_mul_ten_big(value_1, ten, &value_1);
+        dif++;
+        value_1.bits[size_decimal] = value_2.bits[size_decimal];;
        }
     }
     result->bits[size_decimal] = value_1.bits[size_decimal];
