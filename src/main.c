@@ -11,8 +11,8 @@ int main(){
     printf("\n***** DECIMAL 1 *****\n\n");
     s21_print_decimal(&dec);
 
-    // printf("\n***** DECIMAL 2 *****\n\n");
-    // s21_print_decimal(&dec2);
+    printf("\n***** DECIMAL 2 *****\n\n");
+    s21_print_decimal(&dec2);
 
     s21_floor(dec, &res);
 

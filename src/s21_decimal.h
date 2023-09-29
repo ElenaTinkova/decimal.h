@@ -18,12 +18,16 @@ typedef struct {
 
 void s21_print_decimal(s21_decimal *value);
 void s21_print_big_decimal(s21_big_decimal *value);
+int s21_get_bit(s21_decimal *value, int index);
 int s21_get_big_bit(s21_big_decimal *value, int index);
 void s21_set_big_bit(s21_big_decimal *value, int index, int bit);
+void s21_set_bit(s21_decimal *value, int index, int bit);
+int s21_get_sign(s21_decimal *value);
 int s21_get_big_sign(s21_big_decimal *value);
 void s21_set_big_sign(s21_big_decimal *value, int bit);
-//void s21_set_small_sign(s21_decimal *value, int bit);
+void s21_set_sign(s21_decimal *value, int sign);
 int s21_get_big_pow(s21_big_decimal *value);
+int s21_get_pow(s21_decimal *value);
 void s21_levelup_big_pow(s21_big_decimal *value, int difference_number);
 int s21_difference_big_pow(s21_big_decimal *value1, s21_big_decimal *value2);
 void s21_set_big_pow(s21_big_decimal *value, int pow_value);
@@ -51,7 +55,7 @@ int s21_is_equal(s21_decimal value_1, s21_decimal value_2);
 int s21_is_not_equal(s21_decimal value_1, s21_decimal value_2);
 
 //Преобразователи
-int s21_from_int_to_decimal(int src, s21_big_decimal *dst);
+int s21_from_int_to_decimal(int src, s21_decimal *dst);
 // int s21_from_float_to_decimal(float src, s21_decimal *dst);
 int s21_from_decimal_to_int(s21_decimal src, int *dst);
 int s21_from_decimal_to_float(s21_decimal src, float *dst);

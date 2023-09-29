@@ -33,7 +33,7 @@ void s21_print_big_decimal(s21_big_decimal *value) {
   }
 }
 
-//-----------Получение бита-----------//
+//-----------Получение бита в big decimal-----------//
 int s21_get_big_bit(s21_big_decimal *value, int index) {
   int num_bit = index / 32;  // определяем в каком bits структуры работаем
   int position =
@@ -42,7 +42,14 @@ int s21_get_big_bit(s21_big_decimal *value, int index) {
          position;  // возвращаем значение искомого бита
 }
 
-//-----------Изменение бита-----------//
+//-----------Получение бита в decimal-----------//
+int s21_get_bit(s21_decimal *value, int index) {
+  int num_bit = index / 32; // определяем в каком bits структуры работаем
+  int position = index % 32; // определяем позицию бита, который хотим проверить 
+  return (value->bits[num_bit] & (1 << position)) >> position; // возвращаем значение искомого бита
+}
+
+//-----------Изменение бита в big decimal-----------//
 void s21_set_big_bit(s21_big_decimal *value, int index, int bit) {
   int num_bit = index / 32;
   int position = index % 32;
@@ -51,15 +58,29 @@ void s21_set_big_bit(s21_big_decimal *value, int index, int bit) {
   else
     value->bits[num_bit] &= ~(1 << position);  // меняем на 0
 }
+//-----------Изменение бита в decimal-----------//
+void s21_set_bit(s21_decimal *value, int index, int bit) {
+  int num_bit = index / 32;
+  int position = index % 32;
+  if (bit)
+    value->bits[num_bit] |= (1 << position); // меняем интересующий бит на 1
+  else
+    value->bits[num_bit] &= ~(1 << position); // меняем на 0
+}
 
-//-----------Получение знака decimal-----------//
+//-----------Получение знака big decimal-----------//
 int s21_get_big_sign(s21_big_decimal *value) {
   int size_decimal = sizeof(s21_big_decimal) / 4 - 1;  //Кол-во bits в структуре
   int check_sign = value->bits[size_decimal] >> 31;
   return check_sign;
 }
 
-//-----------Изменение знака decimal-----------//
+//-----------Получение знака decimal-----------//
+int s21_get_sign(s21_decimal *value) {
+  return (value->bits[3] & MASK_MINUS);
+}
+
+//-----------Изменение знака big decimal-----------//
 void s21_set_big_sign(s21_big_decimal *value, int bit) {
   int size_decimal = sizeof(s21_big_decimal) / 4 - 1;  //Кол-во bits в структуре
   if (bit) {
@@ -69,11 +90,30 @@ void s21_set_big_sign(s21_big_decimal *value, int bit) {
   }
 }
 
+//-----------Изменение знака decimal-----------//
+void s21_set_sign(s21_decimal *value, int sign) {
+  if (sign)
+    value->bits[3] |= MASK_MINUS;
+  else
+    value->bits[3] &= ~(MASK_MINUS);
+}
+
 //-----------Получение степени decimal-----------//
 int s21_get_big_pow(s21_big_decimal *value) {
   int size_decimal = sizeof(s21_big_decimal) / 4 - 1;
   int pow = 0;
   if (s21_get_big_sign(value)) {
+    pow = (value->bits[size_decimal] ^ MASK_MINUS) >> 16 ;
+  } else {
+    pow = value->bits[size_decimal] >> 16;
+  }
+  return pow;
+}
+
+int s21_get_pow(s21_decimal *value){
+  int size_decimal = sizeof(s21_decimal) / 4 - 1;
+  int pow = 0;
+  if (s21_get_sign(value)) {
     pow = (value->bits[size_decimal] ^ MASK_MINUS) >> 16 ;
   } else {
     pow = value->bits[size_decimal] >> 16;
