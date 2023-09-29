@@ -70,7 +70,7 @@ void s21_set_bit(s21_decimal *value, int index, int bit) {
 
 //-----------Получение знака big decimal-----------//
 int s21_get_big_sign(s21_big_decimal *value) {
-  int size_decimal = sizeof(s21_big_decimal) / 4 - 1;  //Кол-во bits в структуре
+  int size_decimal = 7;  //Кол-во bits в структуре
   int check_sign = value->bits[size_decimal] >> 31;
   return check_sign;
 }
@@ -82,7 +82,7 @@ int s21_get_sign(s21_decimal *value) {
 
 //-----------Изменение знака big decimal-----------//
 void s21_set_big_sign(s21_big_decimal *value, int bit) {
-  int size_decimal = sizeof(s21_big_decimal) / 4 - 1;  //Кол-во bits в структуре
+  int size_decimal = 7;  //Кол-во bits в структуре
   if (bit) {
     value->bits[size_decimal] |= MASK_MINUS;
   } else {
@@ -100,7 +100,7 @@ void s21_set_sign(s21_decimal *value, int sign) {
 
 //-----------Получение степени decimal-----------//
 int s21_get_big_pow(s21_big_decimal *value) {
-  int size_decimal = sizeof(s21_big_decimal) / 4 - 1;
+  int size_decimal = 7;
   int pow = 0;
   if (s21_get_big_sign(value)) {
     pow = (value->bits[size_decimal] ^ MASK_MINUS) >> 16 ;
@@ -111,7 +111,7 @@ int s21_get_big_pow(s21_big_decimal *value) {
 }
 
 int s21_get_pow(s21_decimal *value){
-  int size_decimal = sizeof(s21_decimal) / 4 - 1;
+  int size_decimal = 3;
   int pow = 0;
   if (s21_get_sign(value)) {
     pow = (value->bits[size_decimal] ^ MASK_MINUS) >> 16 ;
@@ -123,7 +123,7 @@ int s21_get_pow(s21_decimal *value){
 
 //-----------Занесение степени decimal-----------//
 void s21_set_big_pow(s21_big_decimal *value, int pow_value) {
-  int size_decimal = sizeof(s21_big_decimal) / 4 - 1;
+  int size_decimal = 7;
   int pow;
   int sign = s21_get_big_sign(value);
   if (sign) {
@@ -140,7 +140,7 @@ void s21_set_big_pow(s21_big_decimal *value, int pow_value) {
 }
 
 void s21_set_pow(s21_decimal *value, int pow_value) {
-  int size_decimal = sizeof(s21_decimal) / 4 - 1;
+  int size_decimal = 3;
   int pow;
   int sign = s21_get_sign(value);
   if (sign) {
@@ -164,7 +164,7 @@ int s21_difference_big_pow(s21_big_decimal *value1, s21_big_decimal *value2) {
 
 //-----------Увеличение степени на n раз-----------//
 void s21_levelup_big_pow(s21_big_decimal *value, int difference_number) {
-  int size_decimal = sizeof(s21_big_decimal) / 4 - 1;
+  int size_decimal = 7;
   int value_pow = 0;
   //Заполнение массива под степень
   if (s21_get_big_sign(value)) {
@@ -313,24 +313,7 @@ int s21_overflow(s21_big_decimal *value){
 
 int s21_add_big_decimal(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result) {
   // Проверка степени перед операцией сложения
-  int size_decimal = sizeof(s21_big_decimal) / 4 - 1; //bits где лежит степень
-  
-  int dif = s21_difference_big_pow(&value_1, &value_2);  // dif > 0 = value_1 > value_2; dif < 0 = value_2 > value_1;
-  if (dif != 0) {
-    while (dif != 0) {
-      s21_big_decimal ten = {{10, 0, 0, 0, 0, 0, 0, 0}};
-      if (dif > 0) { 
-        s21_levelup_big_pow(&value_2, 1); //увеличение степени на 1 второго децимал
-        s21_mul_ten_big(value_2, ten, &value_2); //умножение мантиссы на 10
-        dif--;
-       }else if(dif < 0){
-         s21_levelup_big_pow(&value_1, 1); //увеличение степени на 1 первого децимал
-         s21_mul_ten_big(value_1, ten, &value_1);
-         dif++;
-       }
-    }
-    result->bits[size_decimal] = value_1.bits[size_decimal]; //запись общей степени в результат
-  }
+  s21_normalization(value_1, value_2, result);
 
   int sign1 = s21_get_big_sign(&value_1);
   int sign2 = s21_get_big_sign(&value_2);
@@ -485,24 +468,7 @@ int s21_is_big_less(s21_big_decimal value_1, s21_big_decimal value_2) {
 
 int s21_sub_big(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result) {
   // Проверка степени перед операцией сложения
-  int size_decimal = sizeof(s21_big_decimal) / 4 - 1; //bits где лежит степень
-  int dif = s21_difference_big_pow(&value_1, &value_2);  // dif > 0 = value_1 > value_2; dif < 0 = value_2 > value_1;
-  
-  if (dif != 0) {
-    while (dif != 0) {
-      s21_big_decimal ten = {{10, 0, 0, 0, 0, 0, 0, 0}};
-      if (dif > 0) { 
-        s21_levelup_big_pow(&value_2, 1);
-        s21_mul_ten_big(value_2, ten, &value_2);
-        dif--;
-       }else if(dif < 0){
-         s21_levelup_big_pow(&value_1, 1);
-         s21_mul_ten_big(value_1, ten, &value_1);
-         dif++;
-       }
-    }
-    result->bits[size_decimal] = value_1.bits[size_decimal];
-  }
+  s21_normalization(value_1, value_2, result);
   int sign1 = s21_get_big_sign(&value_1);
   int sign2 = s21_get_big_sign(&value_2);
 
@@ -538,10 +504,10 @@ int s21_big_div(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decima
   
   s21_big_decimal temp = {0};
   s21_big_decimal diff = {0};
-  int error_code = 3;
-  if (s21_is_zero(value_2)) return error_code;
 
-  int val1_sign = s21_get_big_sign(&value_1), val2_sign = s21_get_big_sign(&value_2);
+  int val1_sign = s21_get_big_bit(&value_1, 255), val2_sign = s21_get_big_bit(&value_2, 255);
+  if (val1_sign) s21_set_big_sign(&value_1, 0);
+  if (val2_sign) s21_set_big_sign(&value_2, 0);
 
   int val1_scale = s21_get_big_pow(&value_1), val2_scale = s21_get_big_pow(&value_2);
   int res_scale = val1_scale - val2_scale;
@@ -584,4 +550,24 @@ int s21_is_zero(s21_big_decimal decimal) {
     if (decimal.bits[byte_num] != 0) is_zero = 0;
   }
   return is_zero;
+}
+
+void s21_normalization(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result) {
+  int size_decimal = 7; //bits где лежит степень
+  int dif = s21_difference_big_pow(&value_1, &value_2);  // dif > 0 = value_1 > value_2; dif < 0 = value_2 > value_1;
+  if (dif != 0) {
+    while (dif != 0) {
+      s21_big_decimal ten = {{10, 0, 0, 0, 0, 0, 0, 0}};
+      if (dif > 0) { 
+        s21_levelup_big_pow(&value_2, 1);
+        s21_mul_ten_big(value_2, ten, &value_2);
+        dif--;
+       }else if(dif < 0){
+         s21_levelup_big_pow(&value_1, 1);
+         s21_mul_ten_big(value_1, ten, &value_1);
+         dif++;
+       }
+    }
+    result->bits[size_decimal] = value_1.bits[size_decimal];
+  }
 }
