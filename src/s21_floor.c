@@ -15,7 +15,7 @@ int s21_floor(s21_decimal value, s21_decimal *result) {
     //Число decimal без дробной части
     s21_truncate(value, result);
 
-    s21_decimal dec_for_sub = {1,0,0,0};
+    s21_decimal dec_for_sub = {{1,0,0,0}};
 
     //Если число отрицательное     и   число decimal без дробной части не равно числу с дробной
     if(s21_get_big_sign(&value1) && !(s21_is_big_equal(value1, result1))){

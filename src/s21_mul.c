@@ -14,7 +14,7 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   if (dif != 0) {
     while (dif != 0) {
       if(s21_get_big_pow(&value1) <= 28 || s21_get_big_pow(&value2) <= 28){
-        s21_big_decimal ten = {10, 0, 0, 0, 0, 0, 0, 0};
+        s21_big_decimal ten = {{10, 0, 0, 0, 0, 0, 0, 0}};
         if (dif > 0) { 
           s21_levelup_big_pow(&value2, 1);
           s21_mul_ten_big(value2, ten, &value2);

@@ -2,7 +2,7 @@
 //Из int в decimal
 
 int s21_from_int_to_decimal(int src, s21_decimal *dst){
-    if((src > -21474836470) && (src < 21474836470)){
+    if((src > -2147483647) && (src < 2147483647)){
         if (src < 0){
             src = src * -1;
             s21_set_sign(dst, 1);
