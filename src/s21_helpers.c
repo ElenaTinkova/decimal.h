@@ -521,12 +521,15 @@ int s21_big_div(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decima
   
   s21_big_decimal temp = {0};
   s21_big_decimal diff = {0};
-  
-  // int val1_sign = s21_get_big_bit(&value_1, 255);
-  // int val2_sign = s21_get_big_bit(&value_2, 255);
-  // изменить знаки
-  // проверить и записать степени
-  // добавить проверку на 0
+  int error_code = 3;
+  if (s21_is_zero(value_2)) return error_code;
+
+  int val1_sign = s21_get_big_bit(&value_1, 255), val2_sign = s21_get_big_bit(&value_2, 255);
+  if (val1_sign) s21_set_big_sign(val1_sign, 0);
+  if (val2_sign) s21_set_big_sign(val2_sign, 0);
+
+  int val1_scale = s21_get_big_pow(&value_1), val2_scale = s21_get_big_pow(&value_2);
+  int res_scale = val1_scale - val2_scale;
   
   while (!s21_is_big_greater(value_2, value_1)) {
       int compare = s21_is_big_greater(value_1, value_2);
@@ -557,4 +560,12 @@ void s21_shift_left_big_decimal(s21_big_decimal *value) {
       moved_bit = (uint8_t) (temp >> 32);
       value->bits[i] = (uint32_t)(temp & MAX_UN_INT);
   }
+}
+
+int s21_is_zero(s21_big_decimal decimal) {
+  int is_zero = 1;
+  for (int byte_num = 0; byte_num < 7; byte_num++) {
+    if (decimal.bits[byte_num] != 0) is_zero = 0;
+  }
+  return is_zero;
 }
