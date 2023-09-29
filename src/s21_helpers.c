@@ -538,10 +538,10 @@ int s21_big_div(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decima
   
   s21_big_decimal temp = {0};
   s21_big_decimal diff = {0};
-  int error_code = 3;
-  if (s21_is_zero(value_2)) return error_code;
 
-  int val1_sign = s21_get_big_sign(&value_1), val2_sign = s21_get_big_sign(&value_2);
+  int val1_sign = s21_get_big_bit(&value_1, 255), val2_sign = s21_get_big_bit(&value_2, 255);
+  if (val1_sign) s21_set_big_sign(&value_1, 0);
+  if (val2_sign) s21_set_big_sign(&value_2, 0);
 
   int val1_scale = s21_get_big_pow(&value_1), val2_scale = s21_get_big_pow(&value_2);
   int res_scale = val1_scale - val2_scale;
