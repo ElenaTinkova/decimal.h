@@ -7,7 +7,7 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   s21_big_decimal value2 = s21_enlarge_D(value_2);
   s21_big_decimal result1 = s21_enlarge_D(*result);
   
-  s21_add_big_decimal(value1, value2, &result1);
+  s21_add_big_decimal_p(&value1, &value2, &result1);
   //Проверка на переполнение мантиссы
   int check = s21_overflow(&result1);
   if(!check){
