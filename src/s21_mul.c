@@ -14,14 +14,14 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   if (dif != 0) {
     while (dif != 0) {
       if(s21_get_big_pow(&value1) <= 28 || s21_get_big_pow(&value2) <= 28){
-        s21_big_decimal ten = {{10, 0, 0, 0, 0, 0, 0, 0}};
+        //s21_big_decimal ten = {{10, 0, 0, 0, 0, 0, 0, 0}};
         if (dif > 0) { 
           s21_levelup_big_pow(&value2, 1);
-          s21_mul_ten_big(value2, ten, &value2);
+          s21_mul_ten_big(&value2);
           dif--;
         }else if(dif < 0){
           s21_levelup_big_pow(&value1, 1);
-          s21_mul_ten_big(value1, ten, &value1);
+          s21_mul_ten_big(&value1);
           dif++;
         }
       }
@@ -33,11 +33,11 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   int sign2 = s21_get_big_sign(&value2);
 
   if ((!sign1 && !sign2) || (sign1 && sign2)) { //если оба знака +
-    s21_mul_ten_big(value1,value2,&result1);
+    s21_mul_big(value1, value2, &result1);
   } else if (sign1 || sign2) { // если первый или второй знак -
     s21_set_big_sign(&value1, 0);
     s21_set_big_sign(&value2, 0);
-    s21_mul_ten_big(value1,value2,&result1);
+    s21_mul_big(value1, value2, &result1);
     s21_set_big_sign(&result1, 1);
   }
   
