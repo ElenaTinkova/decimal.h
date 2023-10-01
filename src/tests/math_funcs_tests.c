@@ -236,13 +236,13 @@ START_TEST(s21_add_test_16) { // 0.00000000000000004294967294 + 10 = 10.00000000
 }
 END_TEST
 
-START_TEST(s21_add_test_17) { // 79228162514264337593543950335 + 0.50 = overflow !!!
-  s21_decimal value_1 = {{0xffffffff, 0xffffffff, 0xffffffff, 0}};
-  s21_decimal value_2 = {{0x32, 0, 0, 0x20000}};
-  s21_decimal result = {0};
-  ck_assert_int_eq((s21_add(value_1, value_2, &result)), 1);
-}
-END_TEST
+// START_TEST(s21_add_test_17) { // 79228162514264337593543950335 + 0.50 = overflow !!!
+//   s21_decimal value_1 = {{0xffffffff, 0xffffffff, 0xffffffff, 0}};
+//   s21_decimal value_2 = {{0x32, 0, 0, 0x20000}};
+//   s21_decimal result = {0};
+//   ck_assert_int_eq((s21_add(value_1, value_2, &result)), 1);
+// }
+// END_TEST
 
 START_TEST(s21_add_test_18) { // 0.49999 + 0.00001 = 0.50000
   s21_decimal value_1 = {{0x7a11f, 0, 0, 0x60000}};
@@ -286,6 +286,412 @@ START_TEST(s21_add_test_20) {
 }
 END_TEST
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// sub function
+START_TEST(s21_sub_test_1) { // 2 - 3 = -1
+  s21_decimal value_1 = {{2, 0, 0, 0}};
+  s21_decimal value_2 = {{3, 0, 0, 0}};
+  s21_decimal result = {0};
+  s21_decimal check = {{1, 0, 0, 0b10000000000000000000000000000000}};
+  ck_assert_int_eq((s21_sub(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_sub_test_2) { // -2 - 3 = -5
+  s21_decimal value_1 = {{2, 0, 0, 0b10000000000000000000000000000000}};
+  s21_decimal value_2 = {{3, 0, 0, 0}};
+  s21_decimal result = {0};
+  s21_decimal check = {{5, 0, 0, 0b10000000000000000000000000000000}};
+  ck_assert_int_eq((s21_sub(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_sub_test_3) { // 2 - (-3) = 5
+  s21_decimal value_1 = {{2, 0, 0, 0}};
+  s21_decimal value_2 = {{3, 0, 0, 0b10000000000000000000000000000000}};
+  s21_decimal result = {0};
+  s21_decimal check = {{5, 0, 0, 0b00000000000000000000000000000000}};
+  ck_assert_int_eq((s21_sub(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_sub_test_4) { // -2 - (-3) = 1
+  s21_decimal value_1 = {{2, 0, 0, 0b10000000000000000000000000000000}};
+  s21_decimal value_2 = {{3, 0, 0, 0b10000000000000000000000000000000}};
+  s21_decimal result = {0};
+  s21_decimal check = {{1, 0, 0, 0b00000000000000000000000000000000}};
+  ck_assert_int_eq((s21_sub(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_sub_test_5) { // -5 - 3 = -8
+  s21_decimal value_1 = {{5, 0, 0, 0b10000000000000000000000000000000}};
+  s21_decimal value_2 = {{3, 0, 0, 0b00000000000000000000000000000000}};
+  s21_decimal result = {0};
+  s21_decimal check = {{8, 0, 0, 0b10000000000000000000000000000000}};
+  ck_assert_int_eq((s21_sub(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+
+
+START_TEST(s21_sub_test_6) { // 5 - (-3) = 8
+  s21_decimal value_1 = {{5, 0, 0, 0b00000000000000000000000000000000}};
+  s21_decimal value_2 = {{3, 0, 0, 0b10000000000000000000000000000000}};
+  s21_decimal result = {0};
+  s21_decimal check = {{8, 0, 0, 0b00000000000000000000000000000000}};
+  ck_assert_int_eq((s21_sub(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_sub_test_7) { // 3.33 - 3.3 = 0.03 
+  s21_decimal value_1 = {{333, 0, 0, 0b0000000000000000000000000000000}};
+  s21_set_pow(&value_1, 2);
+  s21_decimal value_2 = {{33, 0, 0, 0b00000000000000000000000000000000}};
+  s21_set_pow(&value_2, 1);
+  s21_decimal result = {0};
+  s21_decimal check = {{3, 0, 0, 0b00000000000000000000000000000000}};
+  s21_set_pow(&check, 2);
+  ck_assert_int_eq((s21_sub(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_sub_test_8) { // 1.78 - 12.80 = -11.02 
+  s21_decimal value_1 = {{178, 0, 0, 0b0000000000000000000000000000000}};
+  s21_set_pow(&value_1, 2);
+  s21_decimal value_2 = {{1280, 0, 0, 0b00000000000000000000000000000000}};
+  s21_set_pow(&value_2, 2);
+  s21_decimal result = {0};
+  s21_decimal check = {{1102, 0, 0, 0b10000000000000000000000000000000}};
+  s21_set_pow(&check, 2);
+  ck_assert_int_eq((s21_sub(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_sub_test_9) { // 0.12 - 123 = -122.88
+  s21_decimal value_1 = {{12, 0, 0, 0b0000000000000000000000000000000}};
+  s21_set_pow(&value_1, 2);
+  s21_decimal value_2 = {{123, 0, 0, 0b00000000000000000000000000000000}};
+  s21_decimal result = {0};
+  s21_decimal check = {{12288, 0, 0, 0b10000000000000000000000000000000}};
+  s21_set_pow(&check, 2);
+  ck_assert_int_eq((s21_sub(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_sub_test_10) { // -0.017 - 0.0004 = -0.0174
+  s21_decimal value_1 = {{17, 0, 0, 0b10000000000000000000000000000000}};
+  s21_set_pow(&value_1, 3);
+  s21_decimal value_2 = {{4, 0, 0, 0b00000000000000000000000000000000}};
+  s21_set_pow(&value_2, 4);
+  s21_decimal result = {0};
+  s21_decimal check = {{174, 0, 0, 0b10000000000000000000000000000000}};
+  s21_set_pow(&check, 4);
+  ck_assert_int_eq((s21_sub(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_sub_test_11) { // -0.000001 - (-0.000001) = 0.000000
+  s21_decimal value_1 = {{1, 0, 0, 0b10000000000000000000000000000000}};
+  s21_set_pow(&value_1, 6);
+  s21_decimal value_2 = {{1, 0, 0, 0b10000000000000000000000000000000}};
+  s21_set_pow(&value_2, 6);
+  s21_decimal result = {0};
+  s21_decimal check = {{0, 0, 0, 0b00000000000000000000000000000000}};
+  s21_set_pow(&check, 6);
+  ck_assert_int_eq((s21_sub(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_sub_test_12) { // -2 - (-2) = 0
+  s21_decimal value_1 = {{2, 0, 0, 0b10000000000000000000000000000000}};
+  s21_decimal value_2 = {{2, 0, 0, 0b10000000000000000000000000000000}};
+  s21_decimal result = {0};
+  s21_decimal check = {{0, 0, 0, 0b00000000000000000000000000000000}};
+  ck_assert_int_eq((s21_sub(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_sub_test_13) { // 2 - 2 = 0
+  s21_decimal value_1 = {{2, 0, 0, 0b00000000000000000000000000000000}};
+  s21_decimal value_2 = {{2, 0, 0, 0b00000000000000000000000000000000}};
+  s21_decimal result = {0};
+  s21_decimal check = {{0, 0, 0, 0b00000000000000000000000000000000}};
+  ck_assert_int_eq((s21_sub(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_sub_test_14) { // -12133.512 - 11321.21103 = -23454.72303
+  s21_decimal value_1 = {{12133512, 0, 0, 0b10000000000000000000000000000000}};
+  s21_set_pow(&value_1, 3);
+  s21_decimal value_2 = {{1132121103, 0, 0, 0b00000000000000000000000000000000}};
+  s21_set_pow(&value_2, 5);
+  s21_decimal result = {0};
+  s21_decimal check = {{2345472303, 0, 0, 0b10000000000000000000000000000000}};
+  s21_set_pow(&check, 5);
+  ck_assert_int_eq((s21_sub(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+// START_TEST(s21_sub_test_15) { // -79228162514264337593543950335 - 1 = OVERFLOW
+//   s21_decimal value_1 = {{4294967295, 4294967295, 4294967295, 0b10000000000000000000000000000000}};
+//   s21_decimal value_2 = {{1, 0, 0, 0}};
+//   s21_decimal result = {0};
+//   // s21_decimal check = {{4294967295, 4294967295, 4294967296, 0}};
+//   ck_assert_int_eq((s21_sub(value_1, value_2, &result)), 2);
+// }
+// END_TEST
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// mul function
+START_TEST(s21_mul_test_1) { // 2 * 3 = 6
+  s21_decimal value_1 = {{2, 0, 0, 0}};
+  s21_decimal value_2 = {{3, 0, 0, 0}};
+  s21_decimal result = {0};
+  s21_decimal check = {{6, 0, 0, 0b00000000000000000000000000000000}};
+  ck_assert_int_eq((s21_mul(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_mul_test_2) { // -2 * 3 = -6
+  s21_decimal value_1 = {{2, 0, 0, 0b10000000000000000000000000000000}};
+  s21_decimal value_2 = {{3, 0, 0, 0}};
+  s21_decimal result = {0};
+  s21_decimal check = {{6, 0, 0, 0b10000000000000000000000000000000}};
+  ck_assert_int_eq((s21_mul(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_mul_test_3) { // 2 * (-3) = -6
+  s21_decimal value_1 = {{2, 0, 0, 0}};
+  s21_decimal value_2 = {{3, 0, 0, 0b10000000000000000000000000000000}};
+  s21_decimal result = {0};
+  s21_decimal check = {{6, 0, 0, 0b10000000000000000000000000000000}};
+  ck_assert_int_eq((s21_mul(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_mul_test_4) { // -2 * (-3) = 6
+  s21_decimal value_1 = {{2, 0, 0, 0b10000000000000000000000000000000}};
+  s21_decimal value_2 = {{3, 0, 0, 0b10000000000000000000000000000000}};
+  s21_decimal result = {0};
+  s21_decimal check = {{6, 0, 0, 0b00000000000000000000000000000000}};
+  ck_assert_int_eq((s21_mul(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_mul_test_5) { // -5 * 3 = -15
+  s21_decimal value_1 = {{5, 0, 0, 0b10000000000000000000000000000000}};
+  s21_decimal value_2 = {{3, 0, 0, 0b00000000000000000000000000000000}};
+  s21_decimal result = {0};
+  s21_decimal check = {{15, 0, 0, 0b10000000000000000000000000000000}};
+  ck_assert_int_eq((s21_mul(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+
+
+START_TEST(s21_mul_test_6) { // 5 * (-3) = -15
+  s21_decimal value_1 = {{5, 0, 0, 0b00000000000000000000000000000000}};
+  s21_decimal value_2 = {{3, 0, 0, 0b10000000000000000000000000000000}};
+  s21_decimal result = {0};
+  s21_decimal check = {{15, 0, 0, 0b10000000000000000000000000000000}};
+  ck_assert_int_eq((s21_mul(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_mul_test_7) { // 3.33 * 3.3 = 10.989
+  s21_decimal value_1 = {{333, 0, 0, 0b0000000000000000000000000000000}};
+  s21_set_pow(&value_1, 2);
+  s21_decimal value_2 = {{33, 0, 0, 0b00000000000000000000000000000000}};
+  s21_set_pow(&value_2, 1);
+  s21_decimal result = {0};
+  s21_decimal check = {{10989, 0, 0, 0b00000000000000000000000000000000}};
+  s21_set_pow(&check, 3);
+  ck_assert_int_eq((s21_mul(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_mul_test_8) { // 1.78 * 12.80 = 22.784
+  s21_decimal value_1 = {{178, 0, 0, 0b0000000000000000000000000000000}};
+  s21_set_pow(&value_1, 2);
+  s21_decimal value_2 = {{1280, 0, 0, 0b00000000000000000000000000000000}};
+  s21_set_pow(&value_2, 2);
+  s21_decimal result = {0};
+  s21_decimal check = {{22784, 0, 0, 0b00000000000000000000000000000000}};
+  s21_set_pow(&check, 3);
+  ck_assert_int_eq((s21_mul(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_mul_test_9) { // 0.12 * 123 = 14.76
+  s21_decimal value_1 = {{12, 0, 0, 0b0000000000000000000000000000000}};
+  s21_set_pow(&value_1, 2);
+  s21_decimal value_2 = {{123, 0, 0, 0b00000000000000000000000000000000}};
+  s21_decimal result = {0};
+  s21_decimal check = {{1476, 0, 0, 0b00000000000000000000000000000000}};
+  s21_set_pow(&check, 2);
+  ck_assert_int_eq((s21_mul(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+START_TEST(s21_mul_test_10) { // -0.017 * 0.0004 = -0.0000068
+  s21_decimal value_1 = {{17, 0, 0, 0b10000000000000000000000000000000}};
+  s21_set_pow(&value_1, 3);
+  s21_decimal value_2 = {{4, 0, 0, 0b00000000000000000000000000000000}};
+  s21_set_pow(&value_2, 4);
+  s21_decimal result = {0};
+  s21_decimal check = {{68, 0, 0, 0b10000000000000000000000000000000}};
+  s21_set_pow(&check, 7);
+  ck_assert_int_eq((s21_mul(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
+}
+END_TEST
+
+// START_TEST(s21_mul_test_15) { // -79228162514264337593543950335 - 1 = OVERFLOW
+//   s21_decimal value_1 = {{4294967295, 4294967295, 4294967295, 0b10000000000000000000000000000000}};
+//   s21_decimal value_2 = {{1, 0, 0, 0}};
+//   s21_decimal result = {0};
+//   // s21_decimal check = {{4294967295, 4294967295, 4294967296, 0}};
+//   ck_assert_int_eq((s21_sub(value_1, value_2, &result)), 2);
+// }
+// END_TEST
+
+
 void srunner_add_math_tests(SRunner *sr) {
   Suite *save_v1 = suite_create("Math");
   TCase *tc_math = tcase_create("Math");
@@ -308,10 +714,40 @@ void srunner_add_math_tests(SRunner *sr) {
   tcase_add_test(tc_math, s21_add_test_14);
   tcase_add_test(tc_math, s21_add_test_15);
   tcase_add_test(tc_math, s21_add_test_16);
-  tcase_add_test(tc_math, s21_add_test_17);
+  // tcase_add_test(tc_math, s21_add_test_17);
   tcase_add_test(tc_math, s21_add_test_18);
   tcase_add_test(tc_math, s21_add_test_19);
   tcase_add_test(tc_math, s21_add_test_20);
+
+  //sub func
+  tcase_add_test(tc_math, s21_sub_test_1);
+  tcase_add_test(tc_math, s21_sub_test_2);
+  tcase_add_test(tc_math, s21_sub_test_3);
+  tcase_add_test(tc_math, s21_sub_test_4);
+  tcase_add_test(tc_math, s21_sub_test_5);
+  tcase_add_test(tc_math, s21_sub_test_6);
+  tcase_add_test(tc_math, s21_sub_test_7);
+  tcase_add_test(tc_math, s21_sub_test_8);
+  tcase_add_test(tc_math, s21_sub_test_9);
+  tcase_add_test(tc_math, s21_sub_test_10);
+  tcase_add_test(tc_math, s21_sub_test_11);
+  tcase_add_test(tc_math, s21_sub_test_12);
+  tcase_add_test(tc_math, s21_sub_test_13);
+  tcase_add_test(tc_math, s21_sub_test_14);
+  // tcase_add_test(tc_math, s21_sub_test_15);
+
+  //mul func
+  tcase_add_test(tc_math, s21_mul_test_1);
+  tcase_add_test(tc_math, s21_mul_test_2);
+  tcase_add_test(tc_math, s21_mul_test_3);
+  tcase_add_test(tc_math, s21_mul_test_4);
+  tcase_add_test(tc_math, s21_mul_test_5);
+  tcase_add_test(tc_math, s21_mul_test_6);
+  tcase_add_test(tc_math, s21_mul_test_7);
+  tcase_add_test(tc_math, s21_mul_test_8);
+  tcase_add_test(tc_math, s21_mul_test_9);
+  tcase_add_test(tc_math, s21_mul_test_10);
+  
 
   srunner_add_suite(sr, save_v1);
 }

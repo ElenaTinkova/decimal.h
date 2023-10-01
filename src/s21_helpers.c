@@ -458,6 +458,7 @@ int s21_sub_big(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decima
       s21_sub_function(value_1, value_2, result);
     }else{
       s21_sub_function(value_2, value_1, result);
+      if (!s21_is_big_equal(value_1, value_2)) 
       s21_set_big_sign(result, 1);
     }
   } else if (sign1 && !sign2) { // если первый знак -
@@ -474,6 +475,7 @@ int s21_sub_big(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decima
       s21_sub_function(value_2, value_1, result);
     }else{
       s21_sub_function(value_1, value_2, result);
+      if (!s21_is_big_equal(value_1, value_2)) 
       s21_set_big_sign(result, 1);
     }
   }
