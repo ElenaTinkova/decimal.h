@@ -314,6 +314,9 @@ int s21_overflow(s21_big_decimal *value){
         bits = value->bits[i];
       }
     }
+    if(flag != 0){
+      break;
+    }
   }
   return flag;
 }
@@ -343,6 +346,7 @@ int s21_add_big_decimal(s21_big_decimal value_1, s21_big_decimal value_2, s21_bi
       s21_sub_function(value_1, value_2, result);
     }else{
       s21_sub_function(value_2, value_1, result);
+      if (!s21_is_big_equal(value_1, value_2)) 
       s21_set_big_sign(result, 1);
     }
   } else if (sign1 && sign2) { // если оба отрицательные
@@ -351,7 +355,6 @@ int s21_add_big_decimal(s21_big_decimal value_1, s21_big_decimal value_2, s21_bi
     s21_add_function(value_2, value_1, result);
     s21_set_big_sign(result, 1);
   }
-
   return 1;
 }
 
@@ -533,12 +536,18 @@ void s21_normalization_with_result(s21_big_decimal *value_1, s21_big_decimal *va
   int size_decimal = 7; 
   s21_normalization(value_1, value_2);
   result->bits[size_decimal] = value_1->bits[size_decimal];
+  s21_set_big_sign(result, 0);
 }
 
 void s21_normalization(s21_big_decimal *value_1, s21_big_decimal *value_2) {
   int dif = s21_difference_big_pow(value_1, value_2);
   if (dif != 0) {
     while (dif != 0) {
+      int pow = s21_get_big_pow(value_1);
+      int pow2 = s21_get_big_pow(value_2);
+      if (pow == 28 && pow2 == 28){
+        break; 
+      } 
       if (dif > 0) { 
         s21_levelup_big_pow(value_2, 1);
         s21_mul_ten_big(value_2);
