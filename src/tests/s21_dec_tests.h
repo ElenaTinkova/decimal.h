@@ -14,5 +14,6 @@
 void srunner_add_math_tests(SRunner *sr);
 void srunner_add_others_tests(SRunner *sr);
 void srunner_add_compare_tests(SRunner *sr);
+void srunner_add_convert_tests(SRunner *sr);
 
 #endif
