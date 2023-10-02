@@ -2,9 +2,10 @@
 
 //-----------Другие функции-----------//
 
-//десятичные числа в диапазоне от положительных 79,228,162,514,264,337,593,543,950,335 до отрицательных
+//десятичные числа в диапазоне от положительных
+// 79,228,162,514,264,337,593,543,950,335 до отрицательных
 
-//коды ошибок: 
+//коды ошибок:
 // 0 - OK
 // 1 - ошибка вычисления
 
@@ -821,7 +822,6 @@ START_TEST(s21_roundTest15) {
 }
 END_TEST
 
-
 // truncate function
 START_TEST(s21_trun_1) {
   s21_decimal dec1;
@@ -1317,8 +1317,6 @@ START_TEST(s21_truncateTest11) {
 }
 END_TEST
 
-
-
 // negate function
 START_TEST(s21_negate_1) {
   s21_decimal value_1 = {{1, 1, 1, 0}};
@@ -1364,13 +1362,12 @@ END_TEST
 // }
 // END_TEST
 
-
 void srunner_add_others_tests(SRunner *sr) {
   Suite *save_v2 = suite_create("Others");
   TCase *tc_others = tcase_create("Others");
   suite_add_tcase(save_v2, tc_others);
 
-  //floor
+  // floor
   tcase_add_test(tc_others, s21_floor_1);
   tcase_add_test(tc_others, s21_floor_2);
   tcase_add_test(tc_others, s21_floor_3);
@@ -1383,7 +1380,7 @@ void srunner_add_others_tests(SRunner *sr) {
   tcase_add_test(tc_others, s21_floor_10);
   tcase_add_test(tc_others, s21_floor_11);
 
-  //round
+  // round
   tcase_add_test(tc_others, s21_round_1);
   tcase_add_test(tc_others, s21_round_2);
   tcase_add_test(tc_others, s21_round_3);
@@ -1413,7 +1410,6 @@ void srunner_add_others_tests(SRunner *sr) {
   tcase_add_test(tc_others, s21_roundTest14);
   tcase_add_test(tc_others, s21_roundTest15);
 
-
   // //truncate
   tcase_add_test(tc_others, s21_trun_1);
   tcase_add_test(tc_others, s21_trun_2);
@@ -1439,11 +1435,10 @@ void srunner_add_others_tests(SRunner *sr) {
   tcase_add_test(tc_others, s21_truncateTest10);
   tcase_add_test(tc_others, s21_truncateTest11);
 
-  //negate
+  // negate
   tcase_add_test(tc_others, s21_negate_1);
   tcase_add_test(tc_others, s21_negate_2);
   tcase_add_test(tc_others, s21_negate_3);
-  
 
   srunner_add_suite(sr, save_v2);
 }

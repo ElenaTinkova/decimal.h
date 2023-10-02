@@ -7,9 +7,10 @@ int main() {
 
   srunner_add_math_tests(sr);
   srunner_add_others_tests(sr);
+  srunner_add_compare_tests(sr);
 
   srunner_set_fork_status(sr, CK_NOFORK);
-  srunner_run_all(sr, CK_NORMAL); //CK_ENV?
+  srunner_run_all(sr, CK_NORMAL);  // CK_ENV?
   err = srunner_ntests_failed(sr);
   srunner_free(sr);
 
