@@ -8,7 +8,7 @@ else
 TESTFLAGS += -fprofile-arcs -ftest-coverage
 endif
 
-all: s21_decimal.a
+all: s21_decimal.a test gcov_report
 	rm -rf *.o
 
 s21_decimal.a:
