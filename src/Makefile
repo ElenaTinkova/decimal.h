@@ -17,7 +17,7 @@ s21_decimal.a:
 	@ranlib s21_decimal.a
 
 test: s21_decimal.a
-	@gcc s21_check/*.c s21_decimal.a $(TESTFLAGS) -o testing
+	@gcc tests/*.c s21_decimal.a $(TESTFLAGS) -o testing
 	./testing
 
 gcov_report:
