@@ -37,7 +37,8 @@ s21_decimal s21_cut_D(s21_big_decimal number);
 void s21_div_ten(s21_big_decimal *value);
 int s21_overflow(s21_big_decimal *value);
 
-void s21_mul_ten_big(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result);
+void s21_mul_big(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result);
+void s21_mul_ten_big(s21_big_decimal *value);
 void s21_add_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result);
 void s21_sub_function(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result);
 
@@ -68,7 +69,6 @@ int s21_truncate(s21_decimal value, s21_decimal *result); //+
 // int s21_round(s21_decimal value, s21_decimal *result);
 
 int s21_add_big_decimal(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result);
-int s21_add_big_decimal_p(s21_big_decimal *value_1, s21_big_decimal *value_2, s21_big_decimal *result);
 int s21_is_big_greater(s21_big_decimal value_1, s21_big_decimal value_2);
 int s21_is_big_equal(s21_big_decimal value_1, s21_big_decimal value_2);
 int s21_is_big_less(s21_big_decimal value_1, s21_big_decimal value_2);
@@ -76,7 +76,9 @@ int s21_sub_big(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decima
 int s21_big_div(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result);
 void s21_shift_left_big_decimal(s21_big_decimal *value);
 int s21_is_zero(s21_big_decimal decimal);
-// void s21_normalization(s21_big_decimal value_1, s21_big_decimal value_2, s21_big_decimal *result);
-
+void s21_normalization_with_result(s21_big_decimal *value_1, s21_big_decimal *value_2, s21_big_decimal *result);
+void s21_normalization(s21_big_decimal *value_1, s21_big_decimal *value_2);
+void s21_reset_all_bit(s21_decimal *value);
+void s21_reset_bit(unsigned int *number, int index);
 
 #endif

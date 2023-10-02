@@ -1,6 +1,8 @@
 #include "s21_decimal.h"
 
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
+  s21_reset_all_bit(result);
+  
   int error = 0; //Код ошибки
   s21_big_decimal value1 = s21_enlarge_D(value_1);
   s21_big_decimal value2 = s21_enlarge_D(value_2);
