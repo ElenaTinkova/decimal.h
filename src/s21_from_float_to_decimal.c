@@ -1,178 +1,66 @@
 #include "s21_decimal.h"
-#include <stdio.h>
 #include <math.h>
-#include <string.h>
 #include <stdint.h>
-
-void writeExponent(s21_decimal *dst, int exponent) {
-    // Учитываем знак экспоненты
-    int sign = (exponent < 0) ? 1 : 0;
-    exponent = (exponent < 0) ? -exponent : exponent;
-
-    // Масштабируем s21_decimal на основе экспоненты
-    for (int i = 0; i < exponent; i++) {
-        if (sign) {
-            // Деление на 10 для отрицательной экспоненты
-            for (int j = 3; j >= 0; j--) {
-                int64_t product = (int64_t)dst->bits[j] * 10;
-                dst->bits[j] = (int32_t)(product & 0xFFFFFFFF);
-                if (j > 0) {
-                    dst->bits[j - 1] += (int32_t)(product >> 32);
-                }
-            }
-        } else {
-            // Умножение на 10 для положительной экспоненты
-            int carry = 0;
-            for (int j = 3; j >= 0; j--) {
-                int64_t product = (int64_t)dst->bits[j] * 10 + carry;
-                dst->bits[j] = (int32_t)(product & 0xFFFFFFFF);
-                carry = (int32_t)(product >> 32);
-            }
-        }
-    }
-}
+//Из float в decimal
 
 int s21_from_float_to_decimal(float src, s21_decimal *dst) {
-    if (!dst)
-        return 1;
-    
-    // Если число бесконечное, не числовое (NaN) или вне допустимого диапазона
-    if (isinf(src) || isnan(src) || (fabsf(src) > 79228162514264337593543950335.0f) ||
-       ((fabsf(src) > 0) && (fabsf(src) < 1e-28)))
-        return 1;
+  for (int i = 0; i < 4; i++) {
+    dst->bits[i] = 0;
+  }
 
-    // Преобразование float в строку с экспонентой
-    char str_float[64];
-    sprintf(str_float, "%+e", src);
+  int error_flag = 0;
 
-    // Извлечение мантиссы и экспоненты из строки
-    int mantissa = str_float[1] - '0';
-    for (int i = 0; i < 6; i++) {
+  if (isinf(src) || isnan(src)) {
+    error_flag = 1;
+  } else {
+    if (src != 0) {
+      // извлекаем знак числа (бит знака)
+      int sign_bit = *(int *)&src >> 31;
+      // извлекаем экспоненту
+      int exponent = ((*(int *)&src & 0x7F800000) >> 23) - 127;
+      // извлекаем мантиссу, сначала убираем знак
+      double mantissa = (double)fabs(src);
+
+      int offset = 0; // Смещение (количество умножений на 10)
+
+      // определяем, сколько раз нужно умножить mantissa на 10, чтобы мантисса
+      // была >= 1
+      while (offset < 28 && (int)mantissa / (1 << 21) == 0) {
         mantissa *= 10;
-        mantissa += str_float[i + 3] - '0';
-    }
+        offset++;
+      }
 
-    int exponent = 0;
-    for (int i = 11; str_float[i] != '\0'; i++) {
-        exponent *= 10;
-        exponent += str_float[i] - '0';
-    }
-    if (str_float[10] == '-') {
-        exponent *= -1;
-    }
-    exponent -= 6;
+      // округляем mantissa до целого числа
+      mantissa = round(mantissa);
 
-    // Преобразование мантиссы в s21_decimal
-    s21_from_int_to_decimal(mantissa, dst);
+      // проверяем, что результат валиден для формата decimal
+      if (offset <= 28 && (exponent >= -94 && exponent <= 95)) {
+        float mantissa_as_float = (float)mantissa;
 
-    // Применение экспоненты к s21_decimal (масштабирование)
-    if (exponent >= 0) {
-        for (int i = 0; i < exponent; i++) {
-            // Умножаем на 10 для положительной экспоненты
-            s21_from_int_to_decimal(10, dst);
+        // убираем нулевые десятичные знаки
+        while (fmod(mantissa_as_float, 10) == 0 && offset > 0) {
+          offset--;
+          mantissa_as_float /= 10;
         }
-    } else {
-        for (int i = 0; i < -exponent; i++) {
-            // Делим на 10 для отрицательной экспоненты
-            writeExponent(dst, -exponent);
+
+        // извлекаем экспоненту для мантиссы
+        exponent = ((*(int *)&mantissa_as_float & 0x7F800000) >> 23) - 127;
+
+        // устанавливаем бит экспоненты
+        dst->bits[exponent / 32] |= 1U << (exponent % 32);
+
+        for (int i = exponent - 1, j = 22; j >= 0; i--, j--) {
+          // устанавливаем биты мантиссы в dst->bits
+          if ((*(int *)&mantissa_as_float & (1 << j)) != 0) {
+            dst->bits[i / 32] |= 1U << (i % 32);
+          }
         }
+
+        // устанавливаем знак и смещение в dst->bits[3]
+        dst->bits[3] = (sign_bit << 31) | (offset << 16);
+      }
     }
+  }
 
-    return 0;
-}
-
-// int s21_from_float_to_decimal(float src, s21_decimal *dst) {
-//     if (!dst) {
-//         return -1; // Возвращаем ошибку, если указатель на dst равен NULL
-//     }
-
-//     // Проверяем, не выходит ли исходное число за пределы Decimal
-//     if (isinf(src) || isnan(src) || (fabsf(src) > 79228162514264337593543950335.0f) ||
-//       ((fabsf(src) > 0) && (fabsf(src) < 1e-28))) {
-//         return 1; // Если выходит, возвращаем ошибку
-//     }
-
-//     // Разбиваем число на целую и дробную части
-//     int integer_part = (int)src;
-//     float fractional_part = src - integer_part;
-
-//     // Определяем знак числа
-//     int sign = (src >= 0) ? 0 : 1;
-
-//     // Вычисляем коэффициент масштабирования
-//     int scale_factor = 0;
-//     while (fractional_part != (int)fractional_part) {
-//         fractional_part *= 10;
-//         scale_factor++;
-//     }
-
-//     // Записываем целую часть в структуру Decimal
-//     dst->bits[0] = integer_part;
-//     dst->bits[1] = 0;
-//     dst->bits[2] = 0;
-//     dst->bits[3] = (scale_factor << 16) | (sign << 31);
-
-//     // Записываем дробную часть в структуру Decimal
-//     int i;
-//     for (i = 0; i < 28; i++) {
-//         fractional_part *= 10;
-//         dst->bits[i / 9] += ((int)fractional_part % 10) << (i % 9 * 4 + 8);
-//     }
-
-//     return 0; // Возвращаем успешное выполнение функции
-// }
-
-// int s21_from_float_to_decimal(float src, s21_decimal *dst) {
-//     int is_error = 0; // 0 - нет ошибки, 1 - есть
-
-//     if (!dst) {
-//         is_error = 1;
-//         return is_error;
-//     }
-
-//     // Если число бесконечное или не числовое (NaN)
-//     if (isinf(src) || isnan(src)) {
-//         is_error = 1;
-//         return is_error;
-//     }
-
-//     // Если число слишком большое или слишком маленькое
-//     if (fabsf(src) > 79228162514264337593543950335.0f || 
-//        ((fabsf(src) > 0) && (fabsf(src) < 1e-28))) {
-//         is_error = 1;
-//         return is_error;
-//     }
-
-//     // Разбиваем float на знак, целую часть и дробную часть
-//     int sign = (src < 0) ? 1 : 0;
-//     float abs_value = (src < 0) ? -src : src;
-//     int int_part = (int)abs_value;
-//     float frac_part = abs_value - (float)int_part;
-
-//     // Определение показателя степени (коэффициента масштабирования)
-//     int exponent = 0;
-//     while (frac_part != 0.0f && exponent < 28) {
-//         frac_part *= 10.0f;
-//         exponent++;
-//     }
-
-//     // Заполнение bits[0], bits[1], bits[2] с учетом целой части
-//     dst->bits[0] = int_part;
-//     dst->bits[1] = int_part >> 32;
-//     dst->bits[2] = int_part >> 64;
-
-//     // Заполнение показателя степени и знака в bits[3]
-//     dst->bits[3] = (sign << 31) | (exponent << 16);
-
-//     return is_error;
-// }
-
-int main(void) {
-  float src1 = 12345678.12345678;
-  s21_decimal dst1;
-  s21_from_float_to_decimal(src1, &dst1);
-  printf("src1: %f\n", src1);
-  s21_print_decimal(&dst1);
-
-  return 0;
+  return error_flag;
 }
