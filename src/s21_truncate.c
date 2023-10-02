@@ -3,15 +3,17 @@
 //любые дробные цифры отбрасываются, включая конечные нули.
 
 int s21_truncate(s21_decimal value, s21_decimal *result){
+      //Зануление резутата
+    for(int i = 0; i < 4; i++){
+        result->bits[i] = 0;
+    }
+    
     int flag = 0; //Код ошибки
     
     s21_big_decimal value1 = s21_enlarge_D(value); //Перевод из decimal в big decimal
     s21_big_decimal result1 = s21_enlarge_D(*result);
 
-    //Зануление резутата
-    for(int i = 0; i < 4; i++){
-        result->bits[i] = 0;
-    }
+
     int pow = s21_get_big_pow(&value1);
     if(pow != 0 && pow <=28){ //Если есть степень
         result1 = value1; //Приравниваем decimal к результату

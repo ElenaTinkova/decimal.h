@@ -4,15 +4,18 @@
 //в сторону отрицательной бесконечности.
 
 int s21_floor(s21_decimal value, s21_decimal *result) {
+
+        //Зануление резутата
+    for(int i = 0; i < 4; i++){
+        result->bits[i] = 0;
+    }
+    
     int flag = 0; //Код ошибки
 
     s21_big_decimal value1 = s21_enlarge_D(value);
     s21_big_decimal result1 = s21_enlarge_D(*result);
     
-    //Зануление резутата
-    for(int i = 0; i < 4; i++){
-        result->bits[i] = 0;
-    }
+
     int pow = s21_get_big_pow(&value1);
     if(pow != 0 && pow <= 28){ //Если есть степень
         //Число decimal без дробной части
