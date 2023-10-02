@@ -10,7 +10,7 @@ int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   s21_sub_big(value1, value2, &result1);
   
   //Проверка на переполнение мантиссы
-  int check = s21_overflow(&result1);
+  int check = s21_overflow_2(&result1);
   if(!check){
     *result = s21_cut_D(result1);
   }

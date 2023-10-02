@@ -210,14 +210,19 @@ START_TEST(s21_add_test_14) { // -0.000001 + 0.000001 = 0.000000
 }
 END_TEST
 
-START_TEST(s21_add_test_15) { // 0.4444444444444444444444443354 + 10 = 10.4444444444444444444444443354
+START_TEST(s21_add_test_15) { // 0.4444444444444444444444443354 + 10 = 10.444444444444444444444444335
 
 // 0b1010100010111101001101011011001101000100100010000110000111000001111111100011100011100001011011010 = 104444444444444444444444443354
 
   s21_decimal value_1 = {{0x5c71c2da, 0x1b9eabb9, 0xe5c5bb8, 0x1c0000}};
   s21_decimal value_2 = {{0xa, 0, 0, 0}};
   s21_decimal result = {0};
-  ck_assert_int_eq((s21_add(value_1, value_2, &result)), 1);
+  s21_decimal check = {{0xcc71c6af, 0xda81ad26, 0x21bf7123, 0x1b0000}};
+  ck_assert_int_eq((s21_add(value_1, value_2, &result)), 0);
+  ck_assert_int_eq(result.bits[0], check.bits[0]);
+  ck_assert_int_eq(result.bits[1], check.bits[1]);
+  ck_assert_int_eq(result.bits[2], check.bits[2]);
+  ck_assert_int_eq(result.bits[3], check.bits[3]);
 }
 END_TEST
 
@@ -236,9 +241,9 @@ END_TEST
 
 START_TEST(s21_add_test_17) { // 79228162514264337593543950335^28 + 5^28 = overflow !!!
   s21_decimal value_1 = {{4294967295, 4294967295, 4294967295, 0b00000000000000000000000000000000}};
-  s21_set_pow(&value_1, 28);
+  s21_set_pow(&value_1, 0);
   s21_decimal value_2 = {{5, 0, 0, 0b00000000000000000000000000000000}};
-  s21_set_pow(&value_2, 28);
+  s21_set_pow(&value_2, 0);
   s21_decimal result = {0};
   ck_assert_int_eq((s21_add(value_1, value_2, &result)), 1);
 }
@@ -487,11 +492,11 @@ START_TEST(s21_sub_test_14) { // -12133.512 - 11321.21103 = -23454.72303
 }
 END_TEST
 
-START_TEST(s21_sub_test_15) { // -79228162514264337593543950335^28 - 1^28 = OVERFLOW
+START_TEST(s21_sub_test_15) { // -79228162514264337593543950335 - 1 = OVERFLOW
   s21_decimal value_1 = {{4294967295, 4294967295, 4294967295, 0b10000000000000000000000000000000}};
-  s21_set_pow(&value_1, 28);
+  s21_set_pow(&value_1, 0);
   s21_decimal value_2 = {{1, 0, 0, 0}};
-  s21_set_pow(&value_2, 28);
+  s21_set_pow(&value_2, 0);
   s21_decimal result = {0};
   ck_assert_int_eq((s21_sub(value_1, value_2, &result)), 2);
 }
@@ -639,21 +644,17 @@ START_TEST(s21_mul_test_10) { // -0.017 * 0.0004 = -0.0000068
 }
 END_TEST
 
-START_TEST(s21_mul_test_11) { // 79228162514264337593543950335^28 * 2^28 = OVERFLOW +inf
+START_TEST(s21_mul_test_11) { // 79228162514264337593543950335 * 2 = OVERFLOW +inf
   s21_decimal value_1 = {{4294967295, 4294967295, 4294967295, 0b00000000000000000000000000000000}};
-  s21_set_pow(&value_1, 28);
   s21_decimal value_2 = {{2, 0, 0, 0}};
-  s21_set_pow(&value_2, 28);
   s21_decimal result = {0};
   ck_assert_int_eq((s21_mul(value_1, value_2, &result)), 1);
 }
 END_TEST
 
-START_TEST(s21_mul_test_12) { // 79228162514264337593543950335^28 * -2^28 = OVERFLOW -inf
+START_TEST(s21_mul_test_12) { // 79228162514264337593543950335 * -2 = OVERFLOW -inf
   s21_decimal value_1 = {{4294967295, 4294967295, 4294967295, 0}};
-  s21_set_pow(&value_1, 28);
   s21_decimal value_2 = {{2, 0, 0, 0b10000000000000000000000000000000}};
-   s21_set_pow(&value_2, 28);
   s21_decimal result = {0};
   ck_assert_int_eq((s21_mul(value_1, value_2, &result)), 2);
 }
@@ -739,18 +740,19 @@ START_TEST(s21_div_test_6) { // -15 : (-3) = 5
 END_TEST
 
 
-START_TEST(s21_div_test_7) { // 79228162514264337593543950335 : 2^28 = OVERFLOW -inf
+START_TEST(s21_div_test_7) { // 79228162514264337593543950335 : 0 = DIV ZERO
   s21_decimal value_1 = {{4294967295, 4294967295, 4294967295, 0b00000000000000000000000000000000}};
-  s21_set_pow(&value_1, 0);
-  s21_decimal value_2 = {{2, 0, 0, 0b00000000000000000000000000000000}};
-  s21_set_pow(&value_2, 28);
+  s21_decimal value_2 = {{0, 0, 0, 0b00000000000000000000000000000000}};
   s21_decimal result = {0};
-  // s21_decimal check = {{5, 0, 0, 0b00000000000000000000000000000000}};
-  ck_assert_int_eq((s21_div(value_1, value_2, &result)), 2);
-  // ck_assert_int_eq(result.bits[0], check.bits[0]);
-  // ck_assert_int_eq(result.bits[1], check.bits[1]);
-  // ck_assert_int_eq(result.bits[2], check.bits[2]);
-  // ck_assert_int_eq(result.bits[3], check.bits[3]);
+  ck_assert_int_eq((s21_div(value_1, value_2, &result)), 3);
+}
+END_TEST
+
+START_TEST(s21_div_test_8) { // 79228162514264337593543950335 : -0.0000 = DIV ZERO
+  s21_decimal value_1 = {{4294967295, 4294967295, 4294967295, 0b00000000000000000000000000000000}};
+  s21_decimal value_2 = {{0, 0, 0, 0x80040000}};
+  s21_decimal result = {0};
+  ck_assert_int_eq((s21_div(value_1, value_2, &result)), 3);
 }
 END_TEST
 
@@ -821,6 +823,7 @@ void srunner_add_math_tests(SRunner *sr) {
   tcase_add_test(tc_math, s21_div_test_5);
   tcase_add_test(tc_math, s21_div_test_6);
   tcase_add_test(tc_math, s21_div_test_7);  
+  tcase_add_test(tc_math, s21_div_test_8);  
 
   srunner_add_suite(sr, save_v1);
 }

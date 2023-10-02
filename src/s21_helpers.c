@@ -294,30 +294,32 @@ s21_decimal s21_cut_D(s21_big_decimal number) {
 }
 
 //-----------Функция переполнение мантиссы-----------//
-int s21_overflow(s21_big_decimal *value){
+int s21_overflow_2(s21_big_decimal *value){
   int flag = 0; //error flag
-  for(int i = 3; i < 7; i++){
-    unsigned int bits = value->bits[i];
-    if(bits > 0){
-      while(bits > 0){
-        if(s21_get_big_pow(value) < 28){
-          s21_div_ten(value);
-          s21_levelup_big_pow(value, 1);
-        }else{
-          if(!s21_get_big_sign(value)){
+  int exp = s21_get_big_pow(value);
+
+  short over = value->bits[3] | value->bits[4] | value->bits[5] | value->bits[6] |
+              value->bits[7];
+
+  while (over && exp != 0) {
+    s21_div_ten(value);
+    over = value->bits[3] | value->bits[4] | value->bits[5] | value->bits[6] |
+              value->bits[7];
+    exp--;
+  }
+
+  over = value->bits[3] | value->bits[4] | value->bits[5] | value->bits[6] |
+              value->bits[7];
+
+  if (over) {
+    if(!s21_get_big_sign(value)){
             flag = 1;
           }else{
             flag = 2;
           }
-          break; 
-        }
-        bits = value->bits[i];
-      }
-    }
-    if(flag != 0){
-      break;
-    }
-  }
+  } 
+
+  if (flag == 0) s21_set_big_pow(value, exp);
   return flag;
 }
 
@@ -577,3 +579,41 @@ void s21_reset_bit(unsigned int *number, int index) {
   // сдвинули единицу на нужную позицию и затем инвертировали все значения
   *number = *number & ~(1 << index);
 }
+
+// int s21_bank_r(s21_big_decimal *res) {
+//   int last_bit = 0; 
+//   int error = 0;
+//   if ( s21_get_big_bit(res, 0) ) {
+//     last_bit = last_bit + 1;
+//   }
+//   for( int i = 1; i < 223; i++) {
+//     if ( s21_get_big_bit(res, 0) ){
+//       if (i % 4 == 0) {
+//         last_bit += 6;
+//     } else if(i % 4 == 1){
+//       last_bit += 2;
+//     } else if ( i % 4 == 2){
+//       last_bit += 4;
+//     } else { last_bit += 8;
+
+//     }
+//   }
+// }
+// last_bit %= 10;
+
+// s21_mul_ten_big(&res); 
+// if(last_bit >= 5){
+//   s21_big_decimal temp = {{ 1, 0, 0, 0, 0, 0, 0, 0}};
+//   s21_set_big_pow(&temp, s21_get_big_pow(res)); 
+//   s21_set_big_bit(&temp, s21_get_sign(&res), 255);
+//   error = s21_add_big_decimal(*res, temp, res);
+// }
+// if (last_bit == 5 ) {
+//   if(
+//   s21_get_big_bit(res, 0)) {
+//      s21_set_big_bit(res, 0, 0);
+//   }
+// }
+
+// return error;
+// }

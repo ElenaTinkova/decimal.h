@@ -32,7 +32,7 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   s21_set_big_pow(&result1, sum_pow);
 
   //Проверка на переполнение мантиссы
-  int check = s21_overflow(&result1);
+  int check = s21_overflow_2(&result1);
   if(!check){
     *result = s21_cut_D(result1);
   }

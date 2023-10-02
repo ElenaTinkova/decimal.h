@@ -35,7 +35,6 @@ void s21_set_big_pow(s21_big_decimal *value, int pow_value);
 s21_big_decimal s21_enlarge_D(s21_decimal number);
 s21_decimal s21_cut_D(s21_big_decimal number);
 void s21_div_ten(s21_big_decimal *value);
-int s21_overflow(s21_big_decimal *value);
 
 void s21_mul_big(s21_big_decimal value1, s21_big_decimal value2, s21_big_decimal *result);
 void s21_mul_ten_big(s21_big_decimal *value);
@@ -80,5 +79,6 @@ void s21_normalization_with_result(s21_big_decimal *value_1, s21_big_decimal *va
 void s21_normalization(s21_big_decimal *value_1, s21_big_decimal *value_2);
 void s21_reset_all_bit(s21_decimal *value);
 void s21_reset_bit(unsigned int *number, int index);
+int s21_overflow_2(s21_big_decimal *value);
 
 #endif

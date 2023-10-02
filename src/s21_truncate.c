@@ -7,7 +7,7 @@ int s21_truncate(s21_decimal value, s21_decimal *result){
     for(int i = 0; i < 4; i++){
         result->bits[i] = 0;
     }
-    
+
     int flag = 0; //Код ошибки
     
     s21_big_decimal value1 = s21_enlarge_D(value); //Перевод из decimal в big decimal
@@ -15,7 +15,7 @@ int s21_truncate(s21_decimal value, s21_decimal *result){
 
 
     int pow = s21_get_big_pow(&value1);
-    if(pow != 0 && pow <=28){ //Если есть степень
+    if(pow >= 0 && pow <=28){ //Если есть степень
         result1 = value1; //Приравниваем decimal к результату
         int value_pow = s21_get_big_pow(&result1); //Значение степени 
         while(value_pow){ 
