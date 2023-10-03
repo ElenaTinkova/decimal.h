@@ -1,7 +1,9 @@
 #ifndef S21_DECIMAL_H_
 #define S21_DECIMAL_H_
 #include <string.h>
-
+#include <math.h>
+#include <stdint.h>
+#include <stdio.h>
 
 #define MASK_MINUS 0x80000000 // 0b10000000000000000000000000000000
 #define MASK_SCALE 0x00ff0000 // 0b00000000111111110000000000000000
@@ -57,7 +59,7 @@ int s21_is_not_equal(s21_decimal value_1, s21_decimal value_2); //+
 
 //Преобразователи
 int s21_from_int_to_decimal(int src, s21_decimal *dst); //+
-// int s21_from_float_to_decimal(float src, s21_decimal *dst);
+int s21_from_float_to_decimal(float src, s21_decimal *dst);
 int s21_from_decimal_to_int(s21_decimal src, int *dst); //+
 int s21_from_decimal_to_float(s21_decimal src, float *dst); //+
 
