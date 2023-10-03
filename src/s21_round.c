@@ -27,7 +27,7 @@ int s21_round(s21_decimal value, s21_decimal *result){
         *result = nachalo;
       }
     } else {
-      result = &value;
+      *result = value;
     }
     if(sign){
       s21_set_sign(result, 1);
