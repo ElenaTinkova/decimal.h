@@ -1,6 +1,7 @@
 #include "s21_decimal.h"
 #include <math.h>
 #include <stdint.h>
+#include <stdio.h>
 //Из float в decimal
 
 int s21_from_float_to_decimal(float src, s21_decimal *dst) {
@@ -44,12 +45,12 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
         exponent = ((*(int *)&mantissa_as_float & 0x7F800000) >> 23) - 127;
 
         // устанавливаем бит экспоненты
-        dst->bits[exponent / 32] |= 1U << (exponent % 32);
+        s21_set_bit(dst, exponent, 1);
 
         for (int i = exponent - 1, j = 22; j >= 0; i--, j--) {
           // устанавливаем биты мантиссы в dst->bits
-          if ((*(int *)&mantissa_as_float & (1 << j)) != 0) {
-            dst->bits[i / 32] |= 1U << (i % 32);
+          if ((*(int *)&mantissa_as_float >> j) & 1) {
+            s21_set_bit(dst, i, 1);
           }
         }
 
