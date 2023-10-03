@@ -14,14 +14,11 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
     error_flag = 1;
   } else {
     if (src != 0) {
-      // извлекаем знак числа (бит знака)
       int sign_bit = *(int *)&src >> 31;
-      // извлекаем экспоненту
       int exponent = ((*(int *)&src & 0x7F800000) >> 23) - 127;
-      // извлекаем мантиссу, сначала убираем знак
       double mantissa = (double)fabs(src);
 
-      int offset = 0; // Смещение (количество умножений на 10)
+      int offset = 0; // cмещение (количество умножений на 10)
 
       // определяем, сколько раз нужно умножить mantissa на 10, чтобы мантисса
       // была >= 1
