@@ -417,14 +417,7 @@ START_TEST(test_floor_30000) {
 
   int is_error = s21_floor(x, &result);
   int is_equal = s21_is_equal(result, expected);
-  printf("\n dec x \n");
-  s21_print_decimal(&x);
-  printf("\n our result \n");
-  s21_print_decimal(&result);
-  printf("\n expected \n");
-  s21_print_decimal(&expected);
-  printf("\n");
-
+  
   ck_assert_int_eq(is_error, 0);
   ck_assert_int_eq(is_equal, 1);  // bits the same
 }

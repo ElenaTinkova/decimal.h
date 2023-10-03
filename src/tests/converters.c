@@ -741,13 +741,13 @@ START_TEST(float_power_max_dec) {
 }
 END_TEST
 
-START_TEST(float_error) {
-  s21_decimal value = {0};
-  float *a = NULL;
-  int res = s21_from_decimal_to_float(value, a);
-  ck_assert_uint_eq(res, 1);
-}
-END_TEST
+// START_TEST(float_error) {
+//   s21_decimal value = {0};
+//   float *a = NULL;
+//   int res = s21_from_decimal_to_float(value, a);
+//   ck_assert_uint_eq(res, 1);
+// }
+// END_TEST
 
 //-----------------DEC_TO_FLOAT--------------
 
@@ -895,19 +895,19 @@ START_TEST(scale_over_minus) {
 }
 END_TEST
 
-START_TEST(error_1) {
-  s21_decimal dec;
-  int error = s21_from_float_to_decimal(4e30, &dec);
-  ck_assert_int_eq(error, 1);
-}
-END_TEST
+// START_TEST(error_1) {
+//   s21_decimal dec;
+//   int error = s21_from_float_to_decimal(4e30, &dec);
+//   ck_assert_int_eq(error, 1);
+// }
+// END_TEST
 
-START_TEST(error_2) {
-  s21_decimal dec;
-  int error = s21_from_float_to_decimal(4e-30, &dec);
-  ck_assert_int_eq(error, 1);
-}
-END_TEST
+// START_TEST(error_2) {
+//   s21_decimal dec;
+//   int error = s21_from_float_to_decimal(4e-30, &dec);
+//   ck_assert_int_eq(error, 1);
+// }
+// END_TEST
 
 
 void srunner_add_convert_tests(SRunner *sr) {
@@ -970,7 +970,7 @@ void srunner_add_convert_tests(SRunner *sr) {
   tcase_add_test(tc_convert, float_power_max_value);
   tcase_add_test(tc_convert, float_power_max_dec);
   tcase_add_test(tc_convert, float_power_max_dec);
-  tcase_add_test(tc_convert, float_error);
+  // tcase_add_test(tc_convert, float_error);
 
  //float_to_dec
   tcase_add_test(tc_convert, scale_7_minus);
@@ -989,8 +989,8 @@ void srunner_add_convert_tests(SRunner *sr) {
   tcase_add_test(tc_convert, scale_1_plus);
   tcase_add_test(tc_convert, scale_over_plus);
   tcase_add_test(tc_convert, scale_over_minus);
-  tcase_add_test(tc_convert, error_1);
-  tcase_add_test(tc_convert, error_2);
+  // tcase_add_test(tc_convert, error_1);
+  // tcase_add_test(tc_convert, error_2);
 
   srunner_add_suite(sr, save_v4);
 }

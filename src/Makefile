@@ -1,6 +1,6 @@
 FLAGS = -Wall -Wextra -Werror -Wuninitialized -std=c11 
 TESTFLAGS = -lcheck --coverage 
-SOURCES_FUN:=$(shell find . -name "*.c")
+SOURCES_FUN:=$(shell find . -not -name "main.c" -name "*.c")
 
 ifeq ($(shell uname), Linux)
 TESTFLAGS += -lm -lsubunit
