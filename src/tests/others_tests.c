@@ -237,6 +237,199 @@ START_TEST(s21_floor_11) {
 }
 END_TEST
 
+START_TEST(s21_floor_12) {
+  // test_floor_no_scale
+  // 79228162514264337593543950335 floor = 79228162514264337593543950335
+  s21_decimal x = {{0xffffffff, 0xffffffff, 0xffffffff, 0}};
+  s21_decimal result = S21_DECIMAL_NULL;
+  s21_decimal expected = {{0xffffffff, 0xffffffff, 0xffffffff, 0}};
+
+  int is_error = s21_floor(x, &result);
+  int is_equal = s21_is_equal(result, expected);
+  ck_assert_int_eq(is_error, 0);
+  ck_assert_int_eq(is_equal, 1);  // bits the same
+}
+END_TEST
+
+START_TEST(s21_floor_13) {
+  // test_floor_no_scale_minus
+  // -79228162514264337593543950335 floor = -79228162514264337593543950335
+  s21_decimal x = {{0xffffffff, 0xffffffff, 0xffffffff, 0x80000000}};
+  s21_decimal result = S21_DECIMAL_NULL;
+  s21_decimal expected = {
+      .bits = {0xffffffff, 0xffffffff, 0xffffffff, 0x80000000}};
+
+  int is_error = s21_floor(x, &result);
+  int is_equal = s21_is_equal(result, expected);
+  ck_assert_int_eq(is_error, 0);
+  ck_assert_int_eq(is_equal, 1);  // bits the same
+}
+END_TEST
+
+START_TEST(test_floor_with_one_scale) {
+  // 5.3 floor = 5
+  s21_decimal x = {{53, 0, 0, 0x10000}};
+  s21_decimal result = S21_DECIMAL_NULL;
+  s21_decimal expected = {{5, 0, 0, 0}};
+
+  int is_error = s21_floor(x, &result);
+  int is_equal = s21_is_equal(result, expected);
+  ck_assert_int_eq(is_error, 0);
+  ck_assert_int_eq(is_equal, 1);  // bits the same
+}
+END_TEST
+
+START_TEST(test_floor_with_one_scale_minus) {
+  // -5.3 floor = -6
+  s21_decimal x = {{53, 0, 0, 0x80010000}};
+  s21_decimal result = S21_DECIMAL_NULL;
+  s21_decimal expected = {{6, 0, 0, 0x80000000}};
+
+  int is_error = s21_floor(x, &result);
+  int is_equal = s21_is_equal(result, expected);
+  ck_assert_int_eq(is_error, 0);
+  ck_assert_int_eq(is_equal, 1);  // bits the same
+}
+END_TEST
+
+START_TEST(test_floor_with_two_scale) {
+  // 5.35 floor = 5
+  s21_decimal x = {{535, 0, 0, 0x20000}};
+  s21_decimal result = S21_DECIMAL_NULL;
+  s21_decimal expected = {{5, 0, 0, 0}};
+
+  int is_error = s21_floor(x, &result);
+  int is_equal = s21_is_equal(result, expected);
+  ck_assert_int_eq(is_error, 0);
+  ck_assert_int_eq(is_equal, 1);  // bits the same
+}
+END_TEST
+
+START_TEST(test_floor_with_two_scale_minus) {
+  // -5.35 floor = -6
+  s21_decimal x = {{535, 0, 0, 0x80020000}};
+  s21_decimal result = S21_DECIMAL_NULL;
+  s21_decimal expected = {{6, 0, 0, 0x80000000}};
+
+  int is_error = s21_floor(x, &result);
+  int is_equal = s21_is_equal(result, expected);
+  ck_assert_int_eq(is_error, 0);
+  ck_assert_int_eq(is_equal, 1);  // bits the same
+}
+END_TEST
+
+START_TEST(test_floor_with_max_scale) {
+  // 7.9228162514264337593543950335 floor = 7
+  s21_decimal x = {{0xffffffff, 0xffffffff, 0xffffffff, 0x1c0000}};
+  s21_decimal result = S21_DECIMAL_NULL;
+  s21_decimal expected = {{7, 0, 0, 0}};
+
+  int is_error = s21_floor(x, &result);
+  int is_equal = s21_is_equal(result, expected);
+  ck_assert_int_eq(is_error, 0);
+  ck_assert_int_eq(is_equal, 1);  // bits the same
+}
+END_TEST
+
+START_TEST(test_floor_with_max_scale_minus) {
+  // -7.9228162514264337593543950335 floor = -8
+  s21_decimal x = {{0xffffffff, 0xffffffff, 0xffffffff, 0x801c0000}};
+  s21_decimal result = S21_DECIMAL_NULL;
+  s21_decimal expected = {{8, 0, 0, 0x80000000}};
+
+  int is_error = s21_floor(x, &result);
+  int is_equal = s21_is_equal(result, expected);
+  ck_assert_int_eq(is_error, 0);
+  ck_assert_int_eq(is_equal, 1);  // bits the same
+}
+END_TEST
+
+START_TEST(test_floor_with_min_number) {
+  // 0.0000000000000000000000000001 floor = 0
+  s21_decimal x = {{1, 0, 0, 0x1c0000}};
+  s21_decimal result = S21_DECIMAL_NULL;
+  s21_decimal expected = {{0, 0, 0, 0}};
+
+  int is_error = s21_floor(x, &result);
+  int is_equal = s21_is_equal(result, expected);
+  ck_assert_int_eq(is_error, 0);
+  ck_assert_int_eq(is_equal, 1);  // bits the same
+}
+END_TEST
+
+START_TEST(test_floor_with_min_number_minus) {
+  // -0.0000000000000000000000000001 floor = -1
+  s21_decimal x = {{1, 0, 0, 0x801c0000}};
+  s21_decimal result = S21_DECIMAL_NULL;
+  s21_decimal expected = {{1, 0, 0, 0x80000000}};
+
+  int is_error = s21_floor(x, &result);
+  int is_equal = s21_is_equal(result, expected);
+  ck_assert_int_eq(is_error, 0);
+  ck_assert_int_eq(is_equal, 1);  // bits the same
+}
+END_TEST
+
+START_TEST(test_floor_with_mid_number_minus) {
+  // -0.01 floor = -1
+  s21_decimal x = {{1, 0, 0, 0x80020000}};
+  s21_decimal result = S21_DECIMAL_NULL;
+  s21_decimal expected = {{1, 0, 0, 0x80000000}};
+
+  int is_error = s21_floor(x, &result);
+  int is_equal = s21_is_equal(result, expected);
+  ck_assert_int_eq(is_error, 0);
+  ck_assert_int_eq(is_equal, 1);  // bits the same
+}
+END_TEST
+
+START_TEST(test_floor_zero_with_scale) {
+  // 0.0000 floor = 0
+  s21_decimal x = {{0, 0, 0, 0x40000}};
+  s21_decimal result = S21_DECIMAL_NULL;
+  s21_decimal expected = {{0, 0, 0, 0}};
+
+  int is_error = s21_floor(x, &result);
+  int is_equal = s21_is_equal(result, expected);
+  ck_assert_int_eq(is_error, 0);
+  ck_assert_int_eq(is_equal, 1);  // bits the same
+}
+END_TEST
+
+START_TEST(test_floor_zero_with_scale_minus) {
+  // -0.0000 floor = -0
+  s21_decimal x = {{0, 0, 0, 0x80040000}};
+  s21_decimal result = S21_DECIMAL_NULL;
+  s21_decimal expected = {{0, 0, 0, 0x80000000}};
+
+  int is_error = s21_floor(x, &result);
+  int is_equal = s21_is_equal(result, expected);
+  ck_assert_int_eq(is_error, 0);
+  ck_assert_int_eq(is_equal, 1);  // bits the same
+}
+END_TEST
+
+START_TEST(test_floor_30000) {
+  // -3.0000 floor = -3
+  s21_decimal x = {{0x7530, 0, 0, 0x80040000}};
+  s21_decimal result = S21_DECIMAL_NULL;
+  s21_decimal expected = {{3, 0, 0, 0x80000000}};
+
+  int is_error = s21_floor(x, &result);
+  int is_equal = s21_is_equal(result, expected);
+  printf("\n dec x \n");
+  s21_print_decimal(&x);
+  printf("\n our result \n");
+  s21_print_decimal(&result);
+  printf("\n expected \n");
+  s21_print_decimal(&expected);
+  printf("\n");
+
+  ck_assert_int_eq(is_error, 0);
+  ck_assert_int_eq(is_equal, 1);  // bits the same
+}
+END_TEST
+
 // round function
 START_TEST(s21_round_1) {
   s21_decimal dec1;
@@ -1350,17 +1543,60 @@ START_TEST(s21_negate_3) {
 }
 END_TEST
 
-// START_TEST(s21_negate_2) {
-//   float a = 10.1234e5;
-//   float res_a = 0;
-//   s21_decimal src = {0};
-//   s21_from_float_to_decimal(a, &src);
-//   s21_decimal res = {0};
-//   s21_negate(src, &res);
-//   s21_from_decimal_to_float(res, &res_a);
-//   ck_assert_float_eq(-10.1234e5, res_a);
-// }
-// END_TEST
+START_TEST(negate_positive_zero) {
+  s21_decimal value = S21_DECIMAL_NULL;
+  s21_decimal expected = S21_DECIMAL_NULL;
+  s21_set_sign(&expected, 1);
+  s21_decimal result = {{0, 1, 2, 3}};  // Any valid but not null value suits
+  s21_negate(value, &result);
+  ck_assert_int_eq(s21_is_equal(result, expected), S21_TRUE);
+}
+END_TEST
+
+START_TEST(negate_negative_zero) {
+  s21_decimal value = S21_DECIMAL_NULL;
+  s21_set_sign(&value, 1);
+  s21_decimal expected = S21_DECIMAL_NULL;
+  s21_decimal result = {{0, 1, 2, 3}};  // Any valid but not null value suits
+  s21_negate(value, &result);
+
+  ck_assert_int_eq(s21_is_equal(result, expected), S21_TRUE);
+}
+END_TEST
+
+START_TEST(double_negate_return_initial_value) {
+  s21_decimal initial = {{20, 2, 1000, 0}};
+  s21_decimal result = S21_DECIMAL_NULL;
+
+  s21_negate(initial, &result);
+  s21_negate(result, &result);
+
+  ck_assert_int_eq(s21_is_equal(result, initial), S21_TRUE);
+}
+END_TEST
+
+START_TEST(negate_regular_decimal_is_ok) {
+  s21_decimal value = {{20, 2, 1000, 0}};
+  s21_decimal expected = {{20, 2, 1000, 0}};
+  s21_set_sign(&expected, 1);
+  s21_decimal result = S21_DECIMAL_NULL;
+
+  s21_negate(value, &result);
+
+  ck_assert_int_eq(s21_is_equal(result, expected), S21_TRUE);
+}
+END_TEST
+
+START_TEST(return_zero_as_function_result_if_ok) {
+  s21_decimal value = {{20, 2, 1000, 0}};
+  s21_decimal destination = S21_DECIMAL_NULL;
+
+  int result = s21_negate(value, &destination);
+
+  ck_assert_int_eq(result, 0);
+}
+END_TEST
+
 
 void srunner_add_others_tests(SRunner *sr) {
   Suite *save_v2 = suite_create("Others");
@@ -1379,6 +1615,20 @@ void srunner_add_others_tests(SRunner *sr) {
   tcase_add_test(tc_others, s21_floor_9);
   tcase_add_test(tc_others, s21_floor_10);
   tcase_add_test(tc_others, s21_floor_11);
+  tcase_add_test(tc_others, s21_floor_12);
+  tcase_add_test(tc_others, s21_floor_13);
+  tcase_add_test(tc_others, test_floor_with_one_scale);
+  tcase_add_test(tc_others, test_floor_with_one_scale_minus);
+  tcase_add_test(tc_others, test_floor_with_two_scale);
+  tcase_add_test(tc_others, test_floor_with_two_scale_minus);
+  tcase_add_test(tc_others, test_floor_with_max_scale);
+  tcase_add_test(tc_others, test_floor_with_max_scale_minus);
+  tcase_add_test(tc_others, test_floor_with_min_number);
+  tcase_add_test(tc_others, test_floor_with_min_number_minus);
+  tcase_add_test(tc_others, test_floor_with_mid_number_minus);
+  tcase_add_test(tc_others, test_floor_zero_with_scale);
+  tcase_add_test(tc_others, test_floor_zero_with_scale_minus);
+  tcase_add_test(tc_others, test_floor_30000);
 
   // round
   tcase_add_test(tc_others, s21_round_1);
@@ -1439,6 +1689,11 @@ void srunner_add_others_tests(SRunner *sr) {
   tcase_add_test(tc_others, s21_negate_1);
   tcase_add_test(tc_others, s21_negate_2);
   tcase_add_test(tc_others, s21_negate_3);
+  tcase_add_test(tc_others, negate_positive_zero);
+  tcase_add_test(tc_others, negate_negative_zero);
+  tcase_add_test(tc_others, double_negate_return_initial_value);
+  tcase_add_test(tc_others, negate_regular_decimal_is_ok);
+  tcase_add_test(tc_others, return_zero_as_function_result_if_ok);
 
   srunner_add_suite(sr, save_v2);
 }

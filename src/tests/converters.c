@@ -1,5 +1,6 @@
 #include "s21_dec_tests.h"
 
+//-----------------INT_TO_DEC--------------
 
 START_TEST(int_to_dec_1) {
   s21_decimal result, origin;
@@ -675,13 +676,246 @@ START_TEST(dec_to_int_24) {
 }
 END_TEST
 
+//-----------------DEC_TO_FLOAT--------------
+START_TEST(normal_float) {
+  s21_decimal value = {{8}};
+  float a = 0;
+  float b = 8.0;
+  s21_from_decimal_to_float(value, &a);
+  ck_assert_float_eq(a, b);
+}
+END_TEST
+
+START_TEST(null_float) {
+  s21_decimal value = {0};
+  float a = 0.0;
+  float b = 0.0;
+  s21_from_decimal_to_float(value, &a);
+  ck_assert_float_eq(a, b);
+}
+END_TEST
+
+START_TEST(float_power) {
+  s21_decimal value = {{8}};
+  float a = 0.0;
+  float b = -0.8;
+  s21_set_pow(&value, 1);
+  s21_set_sign(&value, 1);
+  s21_from_decimal_to_float(value, &a);
+  ck_assert_float_eq(a, b);
+}
+END_TEST
+
+START_TEST(float_big_power) {
+  s21_decimal value = {{8}};
+  float a = 0.0;
+  float b = -0.0000000000000000000000000008;
+  s21_set_pow(&value, 28);
+  s21_set_sign(&value, 1);
+  s21_from_decimal_to_float(value, &a);
+  ck_assert_float_eq(a, b);
+}
+END_TEST
+
+START_TEST(float_power_max_value) {
+  s21_decimal value = {0};
+  value.bits[0] = 147484107;
+  float a = 0.0;
+  float b = -1.47484107;
+  s21_set_pow(&value, 8);
+  s21_set_sign(&value, 1);
+  s21_from_decimal_to_float(value, &a);
+  ck_assert_float_eq_tol(a, b, 1e-6);
+}
+END_TEST
+
+START_TEST(float_power_max_dec) {
+  s21_decimal value = {0};
+  value.bits[0] = 214748;
+  float a = 0.0;
+  float b = -0.00000214748;
+  s21_set_pow(&value, 11);
+  s21_set_sign(&value, 1);
+  s21_from_decimal_to_float(value, &a);
+  ck_assert_float_eq_tol(a, b, 1e-6);
+}
+END_TEST
+
+START_TEST(float_error) {
+  s21_decimal value = {0};
+  float *a = NULL;
+  int res = s21_from_decimal_to_float(value, a);
+  ck_assert_uint_eq(res, 1);
+}
+END_TEST
+
+//-----------------DEC_TO_FLOAT--------------
+
+START_TEST(scale_7_minus) {
+  s21_decimal dec;
+  s21_from_float_to_decimal(-0.57495734034, &dec);
+  float num = 0;
+  s21_from_decimal_to_float(dec, &num);
+  ck_assert_float_eq_tol(num, -0.57495734034, 1e-06);
+}
+END_TEST
+
+START_TEST(scale_7_plus) {
+  s21_decimal dec;
+  s21_from_float_to_decimal(0.948374356345, &dec);
+  float num = 0;
+  s21_from_decimal_to_float(dec, &num);
+  ck_assert_float_eq_tol(num, 0.948374356345, 1e-06);
+}
+END_TEST
+
+START_TEST(scale_6_plus) {
+  s21_decimal dec;
+  s21_from_float_to_decimal(1.85466345, &dec);
+  float num = 0;
+  s21_from_decimal_to_float(dec, &num);
+  ck_assert_float_eq_tol(num, 1.85466345, 1e-05);
+}
+END_TEST
+
+START_TEST(scale_6_minus) {
+  s21_decimal dec;
+  s21_from_float_to_decimal(-1.352847384, &dec);
+  float num = 0;
+  s21_from_decimal_to_float(dec, &num);
+  ck_assert_float_eq_tol(num, -1.352847384, 1e-05);
+}
+END_TEST
+
+START_TEST(scale_5_minus) {
+  s21_decimal dec;
+  s21_from_float_to_decimal(-10.84566345, &dec);
+  float num = 0;
+  s21_from_decimal_to_float(dec, &num);
+  ck_assert_float_eq_tol(num, -10.84566345, 1e-04);
+}
+END_TEST
+
+START_TEST(scale_5_plus) {
+  s21_decimal dec;
+  s21_from_float_to_decimal(93.654456436, &dec);
+  float num = 0;
+  s21_from_decimal_to_float(dec, &num);
+  ck_assert_float_eq_tol(num, 93.654456436, 1e-04);
+}
+END_TEST
+
+START_TEST(scale_4_plus) {
+  s21_decimal dec;
+  s21_from_float_to_decimal(684.53764356345, &dec);
+  float num = 0;
+  s21_from_decimal_to_float(dec, &num);
+  ck_assert_float_eq_tol(num, 684.53764356345, 1e-03);
+}
+END_TEST
+
+START_TEST(scale_4_minus) {
+  s21_decimal dec;
+  s21_from_float_to_decimal(-949.7546456, &dec);
+  float num = 0;
+  s21_from_decimal_to_float(dec, &num);
+  ck_assert_float_eq_tol(num, -949.7546456, 1e-03);
+}
+END_TEST
+
+START_TEST(scale_3_plus) {
+  s21_decimal dec;
+  s21_from_float_to_decimal(-5653.10293754, &dec);
+  float num = 0;
+  s21_from_decimal_to_float(dec, &num);
+  ck_assert_float_eq_tol(num, -5653.10293754, 1e-02);
+}
+END_TEST
+
+START_TEST(scale_3_minus) {
+  s21_decimal dec;
+  s21_from_float_to_decimal(7342.7865342, &dec);
+  float num = 0;
+  s21_from_decimal_to_float(dec, &num);
+  ck_assert_float_eq_tol(num, 7342.7865342, 1e-02);
+}
+END_TEST
+
+START_TEST(scale_2_minus) {
+  s21_decimal dec;
+  s21_from_float_to_decimal(-99987.45233234, &dec);
+  float num = 0;
+  s21_from_decimal_to_float(dec, &num);
+  ck_assert_float_eq_tol(num, -99987.45233234, 1e-01);
+}
+END_TEST
+
+START_TEST(scale_2_plus) {
+  s21_decimal dec;
+  s21_from_float_to_decimal(86874.98541, &dec);
+  float num = 0;
+  s21_from_decimal_to_float(dec, &num);
+  ck_assert_float_eq_tol(num, 86874.98541, 1e-01);
+}
+END_TEST
+
+START_TEST(scale_1_minus) {
+  s21_decimal dec;
+  s21_from_float_to_decimal(-124531.987654321, &dec);
+  float num = 0;
+  s21_from_decimal_to_float(dec, &num);
+  ck_assert_float_eq_tol(num, -124531.987654321, 1);
+}
+END_TEST
+
+START_TEST(scale_1_plus) {
+  s21_decimal dec;
+  s21_from_float_to_decimal(999999.9, &dec);
+  float num = 0;
+  s21_from_decimal_to_float(dec, &num);
+  ck_assert_float_eq_tol(num, 999999.98541, 1);
+}
+END_TEST
+
+START_TEST(scale_over_plus) {
+  s21_decimal dec;
+  s21_from_float_to_decimal(7.743628326e18, &dec);
+  float num = 0;
+  s21_from_decimal_to_float(dec, &num);
+  ck_assert_float_eq_tol(num, 7.743628326e18, 1e+12);
+}
+END_TEST
+
+START_TEST(scale_over_minus) {
+  s21_decimal dec;
+  s21_from_float_to_decimal(-5.6584159654e25, &dec);
+  float num = 0;
+  s21_from_decimal_to_float(dec, &num);
+  ck_assert_float_eq_tol(num, -5.6584159654e25, 1e+19);
+}
+END_TEST
+
+START_TEST(error_1) {
+  s21_decimal dec;
+  int error = s21_from_float_to_decimal(4e30, &dec);
+  ck_assert_int_eq(error, 1);
+}
+END_TEST
+
+START_TEST(error_2) {
+  s21_decimal dec;
+  int error = s21_from_float_to_decimal(4e-30, &dec);
+  ck_assert_int_eq(error, 1);
+}
+END_TEST
+
+
 void srunner_add_convert_tests(SRunner *sr) {
   Suite *save_v4 = suite_create("Convert");
   TCase *tc_convert = tcase_create("Convert");
   suite_add_tcase(save_v4, tc_convert);
 
  //int_to_dec
-
   tcase_add_test(tc_convert, int_to_dec_1);
   tcase_add_test(tc_convert, int_to_dec_2);
   tcase_add_test(tc_convert, int_to_dec_3);
@@ -704,9 +938,7 @@ void srunner_add_convert_tests(SRunner *sr) {
   tcase_add_test(tc_convert, int_to_dec_20);
   tcase_add_test(tc_convert, int_to_dec_21);
 
-
-//dec_to_int
-
+  //dec_to_int
   //tcase_add_test(tc_others, dec_to_int_1);
   tcase_add_test(tc_convert, dec_to_int_2);
   tcase_add_test(tc_convert, dec_to_int_3);
@@ -729,6 +961,36 @@ void srunner_add_convert_tests(SRunner *sr) {
   tcase_add_test(tc_convert, dec_to_int_21);
   tcase_add_test(tc_convert, dec_to_int_23);
   tcase_add_test(tc_convert, dec_to_int_24);
+
+ //dec_to_float
+  tcase_add_test(tc_convert, normal_float);
+  tcase_add_test(tc_convert, null_float);
+  tcase_add_test(tc_convert, float_power);
+  tcase_add_test(tc_convert, float_big_power);
+  tcase_add_test(tc_convert, float_power_max_value);
+  tcase_add_test(tc_convert, float_power_max_dec);
+  tcase_add_test(tc_convert, float_power_max_dec);
+  tcase_add_test(tc_convert, float_error);
+
+ //float_to_dec
+  tcase_add_test(tc_convert, scale_7_minus);
+  tcase_add_test(tc_convert, scale_7_plus);
+  tcase_add_test(tc_convert, scale_6_plus);
+  tcase_add_test(tc_convert, scale_6_minus);
+  tcase_add_test(tc_convert, scale_5_minus);
+  tcase_add_test(tc_convert, scale_5_plus);
+  tcase_add_test(tc_convert, scale_4_plus);
+  tcase_add_test(tc_convert, scale_4_minus);
+  tcase_add_test(tc_convert, scale_3_plus);
+  tcase_add_test(tc_convert, scale_3_minus);
+  tcase_add_test(tc_convert, scale_2_minus);
+  tcase_add_test(tc_convert, scale_2_plus);
+  tcase_add_test(tc_convert, scale_1_minus);
+  tcase_add_test(tc_convert, scale_1_plus);
+  tcase_add_test(tc_convert, scale_over_plus);
+  tcase_add_test(tc_convert, scale_over_minus);
+  tcase_add_test(tc_convert, error_1);
+  tcase_add_test(tc_convert, error_2);
 
   srunner_add_suite(sr, save_v4);
 }
