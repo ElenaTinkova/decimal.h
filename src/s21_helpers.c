@@ -6,9 +6,9 @@
 
 //-----------Вывод decimal в консоль-----------//
 void s21_print_decimal(s21_decimal *value) {
-  int size_decimal = sizeof(s21_decimal) / 4 - 1;  //Кол-во bits в структуре
-  for (int i = size_decimal; i >= 0; i--) {  //Цикл bits
-    for (int j = 31; j >= 0; j--) {          //Цикл byte в bits
+  int size_decimal = sizeof(s21_decimal) / 4 - 1;  // Кол-во bits в структуре
+  for (int i = size_decimal; i >= 0; i--) {  // Цикл bits
+    for (int j = 31; j >= 0; j--) {          // Цикл byte в bits
       if (value->bits[i] & (1 << j)) {
         printf("1");
       } else {
@@ -21,9 +21,10 @@ void s21_print_decimal(s21_decimal *value) {
 
 //-----------Вывод big decimal в консоль-----------//
 void s21_print_big_decimal(s21_big_decimal *value) {
-  int size_decimal = sizeof(s21_big_decimal) / 4 - 1;  //Кол-во bits в структуре
-  for (int i = size_decimal; i >= 0; i--) {  //Цикл bits
-    for (int j = 31; j >= 0; j--) {          //Цикл byte в bits
+  int size_decimal = sizeof(s21_big_decimal) / 4 - 1;  // Кол-во bits в
+                                                       // структуре
+  for (int i = size_decimal; i >= 0; i--) {  // Цикл bits
+    for (int j = 31; j >= 0; j--) {          // Цикл byte в bits
       if (value->bits[i] & (1 << j)) {
         printf("1");
       } else {
@@ -73,7 +74,7 @@ void s21_set_bit(s21_decimal *value, int index, int bit) {
 
 //-----------Получение знака big decimal-----------//
 int s21_get_big_sign(s21_big_decimal *value) {
-  int size_decimal = 7;  //Кол-во bits в структуре
+  int size_decimal = 7;  // Кол-во bits в структуре
   int check_sign = value->bits[size_decimal] >> 31;
   return check_sign;
 }
@@ -83,7 +84,7 @@ int s21_get_sign(s21_decimal *value) { return (value->bits[3] & MASK_MINUS); }
 
 //-----------Изменение знака big decimal-----------//
 void s21_set_big_sign(s21_big_decimal *value, int bit) {
-  int size_decimal = 7;  //Кол-во bits в структуре
+  int size_decimal = 7;  // Кол-во bits в структуре
   if (bit) {
     value->bits[size_decimal] |= MASK_MINUS;
   } else {
@@ -183,17 +184,20 @@ void s21_mul_big(s21_big_decimal value1, s21_big_decimal value2,
                  s21_big_decimal *result) {
   // memset(result, 0, sizeof(s21_big_decimal));
   for (int i = 0; i <= 223; i++) {
-    int temp = s21_get_big_bit(&value2, i);  //бит второго множителя
+    int temp = s21_get_big_bit(&value2, i);  // бит второго множителя
     s21_big_decimal vremia = {
-        {0, 0, 0, 0, 0, 0, 0, 0}};  //временный децимал для сложения в результат
+        {0, 0, 0, 0, 0, 0, 0,
+         0}};  // временный децимал для сложения в результат
     if (temp) {
       for (int j = 0; j <= 223; j++) {
-        if (s21_get_big_bit(&value1, j)) {  //если бит первого множителя равен 1
-          s21_set_big_bit(&vremia, i + j, 1);  //запись 1 со смещением
+        if (s21_get_big_bit(&value1, j)) {  // если бит первого множителя равен
+                                            // 1
+          s21_set_big_bit(&vremia, i + j, 1);  // запись 1 со смещением
         }
       }
-      s21_add_function(vremia, *result,
-                       result);  //сложение результата умножения каждого разряда
+      s21_add_function(
+          vremia, *result,
+          result);  // сложение результата умножения каждого разряда
     }
   }
 }
@@ -213,7 +217,7 @@ void s21_mul_ten_big(s21_big_decimal *value) {
 void s21_add_function(s21_big_decimal value1, s21_big_decimal value2,
                       s21_big_decimal *result) {
   int check = 0;
-  int buff = 0;  //то что в уме)))
+  int buff = 0;  // то что в уме)))
   for (int i = 0; i < 223; i++) {
     check = s21_get_big_bit(&value1, i) + s21_get_big_bit(&value2, i);
     if (check == 0) {
@@ -274,8 +278,8 @@ void s21_sub_function(s21_big_decimal value1, s21_big_decimal value2,
 
 //-----------Функция деления на 10-----------//
 void s21_div_ten(s21_big_decimal *value) {
-  int ten = 10;               //делитель
-  unsigned long int rem = 0;  //остаток
+  int ten = 10;               // делитель
+  unsigned long int rem = 0;  // остаток
   unsigned long int x = 0;
   for (int i = 6; i >= 0; --i) {
     x = value->bits[i];
@@ -338,12 +342,12 @@ int s21_add_big_decimal(s21_big_decimal value_1, s21_big_decimal value_2,
   int sign1 = s21_get_big_sign(&value_1);
   int sign2 = s21_get_big_sign(&value_2);
 
-  if (!sign1 && !sign2) {  //если оба знака +
+  if (!sign1 && !sign2) {  // если оба знака +
     s21_add_function(value_1, value_2, result);
   } else if (sign1 && !sign2) {  // если первый знак -
     s21_set_big_sign(&value_1, 0);
-    int vvs =
-        s21_is_big_greater(value_1, value_2);  //первое значение больше второго?
+    int vvs = s21_is_big_greater(value_1,
+                                 value_2);  // первое значение больше второго?
     if (vvs) {
       s21_sub_function(value_1, value_2, result);
       s21_set_big_sign(result, 1);
@@ -473,7 +477,7 @@ int s21_sub_big(s21_big_decimal value_1, s21_big_decimal value_2,
   int sign1 = s21_get_big_sign(&value_1);
   int sign2 = s21_get_big_sign(&value_2);
 
-  if (!sign1 && !sign2) {  //если оба знака +
+  if (!sign1 && !sign2) {  // если оба знака +
     int vvs = s21_is_big_greater(value_1, value_2);
     if (vvs) {
       s21_sub_function(value_1, value_2, result);
@@ -519,7 +523,7 @@ int s21_big_div(s21_big_decimal value_1, s21_big_decimal value_2,
     int compare = s21_is_big_greater(value_1, value_2);
     uint8_t bit_num_result =
         0;  // номер бита в result, на который нужно установить значение 1
-    diff = value_2;  //времен. делитель
+    diff = value_2;  // времен. делитель
     while (compare) {
       temp = diff;  // подгоняем вр.делитель под вычитание из делимого
       s21_shift_left_big_decimal(&temp);  // сдвигаем

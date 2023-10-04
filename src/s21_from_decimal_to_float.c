@@ -1,7 +1,7 @@
 #include <math.h>
 
 #include "s21_decimal.h"
-//Из decimal в float
+// Из decimal в float
 
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
   float rez = 0;

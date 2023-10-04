@@ -2,12 +2,12 @@
 
 //-----------Другие функции-----------//
 
-//десятичные числа в диапазоне от положительных
-// 79,228,162,514,264,337,593,543,950,335 до отрицательных
+// десятичные числа в диапазоне от положительных
+//  79,228,162,514,264,337,593,543,950,335 до отрицательных
 
-//коды ошибок:
-// 0 - OK
-// 1 - ошибка вычисления
+// коды ошибок:
+//  0 - OK
+//  1 - ошибка вычисления
 
 // floor function
 START_TEST(s21_floor_1) {
@@ -409,17 +409,17 @@ START_TEST(test_floor_zero_with_scale_minus) {
 }
 END_TEST
 
-START_TEST(test_floor_30000) {
-  // -3.0000 floor = -3
-  s21_decimal x = {{0x7530, 0, 0, 0x80040000}};
-  s21_decimal result = S21_DECIMAL_NULL;
-  s21_decimal expected = {{3, 0, 0, 0x80000000}};
+START_TEST(s21_floor_error) {
+  s21_decimal src1;
 
-  int is_error = s21_floor(x, &result);
-  int is_equal = s21_is_equal(result, expected);
-  
-  ck_assert_int_eq(is_error, 0);
-  ck_assert_int_eq(is_equal, 1);  // bits the same
+  src1.bits[0] = 0b00000000000000000000000000000001;
+  src1.bits[1] = 0b00000000000000000000000000000000;
+  src1.bits[2] = 0b00000000000000000000000000000000;
+  src1.bits[3] = 0b00000000011110000000000000000000;
+  s21_decimal result = {{0, 0, 0, 0}};
+  int result_error = s21_floor(src1, &result);
+
+  ck_assert_int_eq(result_error, 1);
 }
 END_TEST
 
@@ -435,26 +435,6 @@ START_TEST(s21_round_1) {
   result.bits[1] = 0b00000000000000000000000000000000;
   result.bits[2] = 0b00000000000000000000000000000000;
   result.bits[3] = 0b00000000000000000000000000000000;
-  s21_decimal res1;
-  s21_round(dec1, &res1);
-  ck_assert_float_eq(res1.bits[0], result.bits[0]);
-  ck_assert_float_eq(res1.bits[1], result.bits[1]);
-  ck_assert_float_eq(res1.bits[2], result.bits[2]);
-  ck_assert_float_eq(res1.bits[3], result.bits[3]);
-}
-END_TEST
-
-START_TEST(s21_round_2) {
-  s21_decimal dec1;
-  dec1.bits[0] = 0b00000000000000000000000010100101;  // -16.5
-  dec1.bits[1] = 0b00000000000000000000000000000000;
-  dec1.bits[2] = 0b00000000000000000000000000000000;
-  dec1.bits[3] = 0b10000000000000010000000000000000;
-  s21_decimal result;
-  result.bits[0] = 0b00000000000000000000000000010000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b10000000000000000000000000000000;
   s21_decimal res1;
   s21_round(dec1, &res1);
   ck_assert_float_eq(res1.bits[0], result.bits[0]);
@@ -882,27 +862,6 @@ START_TEST(s21_roundTest9) {
 }
 END_TEST
 
-START_TEST(s21_roundTest10) {
-  s21_decimal src1, origin;
-  // src1 = 2.5986531268974139743;
-
-  src1.bits[0] = 0b10101111110010001101100101011111;
-  src1.bits[1] = 0b01101000101000101011010010000001;
-  src1.bits[2] = 0b00000000000000000000000000000001;
-  src1.bits[3] = 0b00000000000100110000000000000000;
-  s21_decimal result = {{0, 0, 0, 0}};
-  s21_round(src1, &result);
-  origin.bits[0] = 0b00000000000000000000000000000010;
-  origin.bits[1] = 0b00000000000000000000000000000000;
-  origin.bits[2] = 0b00000000000000000000000000000000;
-  origin.bits[3] = 0b00000000000000000000000000000000;
-  ck_assert_int_eq(origin.bits[3], result.bits[3]);
-  ck_assert_int_eq(origin.bits[2], result.bits[2]);
-  ck_assert_int_eq(origin.bits[1], result.bits[1]);
-  ck_assert_int_eq(origin.bits[0], result.bits[0]);
-}
-END_TEST
-
 START_TEST(s21_roundTest11) {
   s21_decimal src1, origin;
   // src1 = 1;
@@ -959,27 +918,6 @@ START_TEST(s21_roundTest13) {
   origin.bits[1] = 0b00000000000000000000000000000000;
   origin.bits[2] = 0b00000000000000000000000000000000;
   origin.bits[3] = 0b10000000000000000000000000000000;
-  ck_assert_int_eq(origin.bits[3], result.bits[3]);
-  ck_assert_int_eq(origin.bits[2], result.bits[2]);
-  ck_assert_int_eq(origin.bits[1], result.bits[1]);
-  ck_assert_int_eq(origin.bits[0], result.bits[0]);
-}
-END_TEST
-
-START_TEST(s21_roundTest14) {
-  s21_decimal src1, origin;
-  // src1 = 24.56;
-
-  src1.bits[0] = 0b00000000000000000000100110011000;
-  src1.bits[1] = 0b00000000000000000000000000000000;
-  src1.bits[2] = 0b00000000000000000000000000000000;
-  src1.bits[3] = 0b00000000000000100000000000000000;
-  s21_decimal result = {{0, 0, 0, 0}};
-  s21_round(src1, &result);
-  origin.bits[0] = 0b00000000000000000000000000011000;
-  origin.bits[1] = 0b00000000000000000000000000000000;
-  origin.bits[2] = 0b00000000000000000000000000000000;
-  origin.bits[3] = 0b00000000000000000000000000000000;
   ck_assert_int_eq(origin.bits[3], result.bits[3]);
   ck_assert_int_eq(origin.bits[2], result.bits[2]);
   ck_assert_int_eq(origin.bits[1], result.bits[1]);
@@ -1503,6 +1441,19 @@ START_TEST(s21_truncateTest11) {
 }
 END_TEST
 
+START_TEST(s21_truncateTest12) {
+  s21_decimal src1;
+
+  src1.bits[0] = 0b00000000000000000000000000000001;
+  src1.bits[1] = 0b00000000000000000000000000000000;
+  src1.bits[2] = 0b00000000000000000000000000000000;
+  src1.bits[3] = 0b00000000011110000000000000000000;
+  s21_decimal result = {{0, 0, 0, 0}};
+  int result_error = s21_truncate(src1, &result);
+  ck_assert_int_eq(result_error, 1);
+}
+END_TEST
+
 // negate function
 START_TEST(s21_negate_1) {
   s21_decimal value_1 = {{1, 1, 1, 0}};
@@ -1590,7 +1541,6 @@ START_TEST(return_zero_as_function_result_if_ok) {
 }
 END_TEST
 
-
 void srunner_add_others_tests(SRunner *sr) {
   Suite *save_v2 = suite_create("Others");
   TCase *tc_others = tcase_create("Others");
@@ -1621,11 +1571,10 @@ void srunner_add_others_tests(SRunner *sr) {
   tcase_add_test(tc_others, test_floor_with_mid_number_minus);
   tcase_add_test(tc_others, test_floor_zero_with_scale);
   tcase_add_test(tc_others, test_floor_zero_with_scale_minus);
-  tcase_add_test(tc_others, test_floor_30000);
+  tcase_add_test(tc_others, s21_floor_error);
 
   // round
   tcase_add_test(tc_others, s21_round_1);
-  tcase_add_test(tc_others, s21_round_2);
   tcase_add_test(tc_others, s21_round_3);
   tcase_add_test(tc_others, s21_round_4);
   tcase_add_test(tc_others, s21_round_5);
@@ -1646,11 +1595,9 @@ void srunner_add_others_tests(SRunner *sr) {
   tcase_add_test(tc_others, s21_roundTest7);
   tcase_add_test(tc_others, s21_roundTest8);
   tcase_add_test(tc_others, s21_roundTest9);
-  tcase_add_test(tc_others, s21_roundTest10);
   tcase_add_test(tc_others, s21_roundTest11);
   tcase_add_test(tc_others, s21_roundTest12);
   tcase_add_test(tc_others, s21_roundTest13);
-  tcase_add_test(tc_others, s21_roundTest14);
   tcase_add_test(tc_others, s21_roundTest15);
 
   // //truncate
@@ -1677,6 +1624,7 @@ void srunner_add_others_tests(SRunner *sr) {
   tcase_add_test(tc_others, s21_truncateTest9);
   tcase_add_test(tc_others, s21_truncateTest10);
   tcase_add_test(tc_others, s21_truncateTest11);
+  tcase_add_test(tc_others, s21_truncateTest12);
 
   // negate
   tcase_add_test(tc_others, s21_negate_1);

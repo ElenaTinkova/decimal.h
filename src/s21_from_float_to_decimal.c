@@ -1,8 +1,9 @@
-#include "s21_decimal.h"
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
-//Из float в decimal
+
+#include "s21_decimal.h"
+// Из float в decimal
 
 int s21_from_float_to_decimal(float src, s21_decimal *dst) {
   for (int i = 0; i < 4; i++) {
@@ -19,7 +20,7 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
       int exponent = ((*(int *)&src & 0x7F800000) >> 23) - 127;
       double mantissa = (double)fabs(src);
 
-      int offset = 0; // cмещение (количество умножений на 10)
+      int offset = 0;  // cмещение (количество умножений на 10)
 
       // определяем, сколько раз нужно умножить mantissa на 10, чтобы мантисса
       // была >= 1

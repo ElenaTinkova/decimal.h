@@ -18,7 +18,7 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   if (!check) {
     *result = s21_cut_D(result1);
   }
-  error = check;  //Присвоение вывод overflow к error переменной
+  error = check;  // Присвоение вывод overflow к error переменной
 
   return error;
 }

@@ -1,5 +1,5 @@
 #include "s21_decimal.h"
-//Из int в decimal
+// Из int в decimal
 
 int s21_from_int_to_decimal(int src, s21_decimal *dst) {
   if ((src >= -2147483647) && (src <= 2147483647)) {
@@ -8,7 +8,7 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
       dst->bits[0] = src;
       dst->bits[1] = dst->bits[2] = dst->bits[3] = 0;
       s21_set_sign(dst, 1);
-    }else{
+    } else {
       dst->bits[0] = src;
       dst->bits[1] = dst->bits[2] = dst->bits[3] = 0;
     }
