@@ -11,11 +11,13 @@ START_TEST(int_to_dec_1) {
   origin.bits[3] = 0b00000000000000000000000000000000;
   int result_error = 0;
   int my_error = s21_from_int_to_decimal(src, &result);
+
   ck_assert_int_eq(origin.bits[3], result.bits[3]);
   ck_assert_int_eq(origin.bits[2], result.bits[2]);
   ck_assert_int_eq(origin.bits[1], result.bits[1]);
   ck_assert_int_eq(origin.bits[0], result.bits[0]);
   ck_assert_int_eq(result_error, my_error);
+
 }
 END_TEST
 
@@ -62,6 +64,7 @@ START_TEST(int_to_dec_4) {
   origin.bits[3] = 0b00000000000000000000000000000000;
   int result_error = 0;
   int my_error = s21_from_int_to_decimal(src, &result);
+
   ck_assert_int_eq(origin.bits[3], result.bits[3]);
   ck_assert_int_eq(origin.bits[2], result.bits[2]);
   ck_assert_int_eq(origin.bits[1], result.bits[1]);
