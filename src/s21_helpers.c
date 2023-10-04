@@ -23,8 +23,8 @@ void s21_print_decimal(s21_decimal *value) {
 void s21_print_big_decimal(s21_big_decimal *value) {
   int size_decimal = sizeof(s21_big_decimal) / 4 - 1;  // Кол-во bits в
                                                        // структуре
-  for (int i = size_decimal; i >= 0; i--) {  // Цикл bits
-    for (int j = 31; j >= 0; j--) {          // Цикл byte в bits
+  for (int i = size_decimal; i >= 0; i--) {            // Цикл bits
+    for (int j = 31; j >= 0; j--) {                    // Цикл byte в bits
       if (value->bits[i] & (1 << j)) {
         printf("1");
       } else {

@@ -29,6 +29,9 @@ gcov_report:
 	@genhtml -o html_report coverage.info
 	@open html_report/index.html
 
+lint:
+	@clang-format --style=Google -i *.c *.h tests/*.c tests/*.h
+
 clean:
 	@rm -rf *.o testing.c testing *.a *.gcno *.gcda *.gcov *.info
 	@rm -rf html_report s21_decimal s21_lib_test html_report
