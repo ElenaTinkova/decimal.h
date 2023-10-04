@@ -766,6 +766,19 @@ START_TEST(float_power_max_dec) {
 }
 END_TEST
 
+START_TEST(float_to_decimal_ultra) {
+  float a = 12345678901.234567890123456780;
+  float b = 0.0;
+  int error = 0;
+  int func_error = 0;
+  s21_decimal dec = {0};
+  func_error = s21_from_float_to_decimal(a, &dec);
+  s21_from_decimal_to_float(dec, &b);
+  ck_assert_int_eq(error, func_error);
+  ck_assert_float_eq(a, b);
+}
+END_TEST
+
 //-----------------DEC_TO_FLOAT--------------
 
 START_TEST(scale_7_minus) {
@@ -958,7 +971,6 @@ void srunner_add_convert_tests(SRunner *sr) {
   tcase_add_test(tc_convert, invalid_integer_conversion);
 
   // dec_to_int
-  // tcase_add_test(tc_others, dec_to_int_1);
   tcase_add_test(tc_convert, dec_to_int_2);
   tcase_add_test(tc_convert, dec_to_int_3);
   tcase_add_test(tc_convert, dec_to_int_4);
@@ -1010,6 +1022,7 @@ void srunner_add_convert_tests(SRunner *sr) {
   tcase_add_test(tc_convert, scale_over_minus);
   tcase_add_test(tc_convert, inf);
   tcase_add_test(tc_convert, remove_zero_decimal_places);
+  tcase_add_test(tc_convert, float_to_decimal_ultra);
 
   srunner_add_suite(sr, save_v4);
 }

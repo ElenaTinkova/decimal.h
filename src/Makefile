@@ -1,6 +1,7 @@
 FLAGS = -Wall -Wextra -Werror -Wuninitialized -std=c11 
 TESTFLAGS = -lcheck --coverage 
-SOURCES_FUN:=$(shell find . -not -name "main.c" -name "*.c")
+SOURCES_FUN:=$(shell find . -name "*.c")
+SOURCES_TEST:=
 
 ifeq ($(shell uname), Linux)
 TESTFLAGS += -lm -lsubunit
@@ -21,7 +22,7 @@ test: s21_decimal.a
 	./testing
 
 gcov_report:
-	@gcc $(TESTFLAGS) *.c -o s21_lib_test $(TESTFLAGS)
+	@gcc $(TESTFLAGS) *.c ./tests/*.c -o s21_lib_test $(TESTFLAGS)
 	./s21_lib_test
 	@gcov -f $(SOURCES_FUN)
 	@lcov --no-external -t test -o coverage.info -c -d . 
