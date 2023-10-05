@@ -1368,10 +1368,6 @@ END_TEST
 
 START_TEST(int_to_dec_1) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = 1;
   origin.bits[0] = 0b00000000000000000000000000000001;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1389,10 +1385,6 @@ END_TEST
 
 START_TEST(int_to_dec_2) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = 0;
   origin.bits[0] = 0b00000000000000000000000000000000;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1410,10 +1402,6 @@ END_TEST
 
 START_TEST(int_to_dec_3) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = -1;
   origin.bits[0] = 0b00000000000000000000000000000001;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1431,10 +1419,6 @@ END_TEST
 
 START_TEST(int_to_dec_4) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = 2147483647;
   origin.bits[0] = 0b01111111111111111111111111111111;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1452,10 +1436,6 @@ END_TEST
 
 START_TEST(int_to_dec_5) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = -2147483647;
   origin.bits[0] = 0b01111111111111111111111111111111;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1473,10 +1453,6 @@ END_TEST
 
 START_TEST(int_to_dec_6) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = -12345;
   origin.bits[0] = 0b00000000000000000011000000111001;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1494,10 +1470,6 @@ END_TEST
 
 START_TEST(int_to_dec_7) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = -12345;
   origin.bits[0] = 0b00000000000000000011000000111001;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1515,10 +1487,6 @@ END_TEST
 
 START_TEST(int_to_dec_8) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = 0;
   origin.bits[0] = 0b00000000000000000000000000000000;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1536,10 +1504,6 @@ END_TEST
 
 START_TEST(int_to_dec_9) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = 45678;
   origin.bits[0] = 0b00000000000000001011001001101110;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1557,10 +1521,6 @@ END_TEST
 
 START_TEST(int_to_dec_10) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = -45678;
   origin.bits[0] = 0b00000000000000001011001001101110;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1578,10 +1538,6 @@ END_TEST
 
 START_TEST(int_to_dec_11) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = 5555555;
   origin.bits[0] = 0b00000000010101001100010101100011;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1599,10 +1555,6 @@ END_TEST
 
 START_TEST(int_to_dec_12) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = -5555555;
   origin.bits[0] = 0b00000000010101001100010101100011;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1620,10 +1572,6 @@ END_TEST
 
 START_TEST(int_to_dec_13) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = 127;
   origin.bits[0] = 0b00000000000000000000000001111111;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1641,10 +1589,6 @@ END_TEST
 
 START_TEST(int_to_dec_14) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = -127;
   origin.bits[0] = 0b00000000000000000000000001111111;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1662,10 +1606,6 @@ END_TEST
 
 START_TEST(int_to_dec_15) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = 34567898;
   origin.bits[0] = 0b00000010000011110111011011011010;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1683,10 +1623,6 @@ END_TEST
 
 START_TEST(int_to_dec_16) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = -34567898;
   origin.bits[0] = 0b00000010000011110111011011011010;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1704,10 +1640,6 @@ END_TEST
 
 START_TEST(int_to_dec_17) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = 999;
   origin.bits[0] = 0b00000000000000000000001111100111;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1725,10 +1657,6 @@ END_TEST
 
 START_TEST(int_to_dec_18) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = -999;
   origin.bits[0] = 0b00000000000000000000001111100111;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1746,10 +1674,6 @@ END_TEST
 
 START_TEST(int_to_dec_19) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = -3254754;
   origin.bits[0] = 0b00000000001100011010100111100010;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1767,10 +1691,6 @@ END_TEST
 
 START_TEST(int_to_dec_20) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = 3436425;
   origin.bits[0] = 0b00000000001101000110111110001001;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -1788,10 +1708,6 @@ END_TEST
 
 START_TEST(int_to_dec_21) {
   s21_decimal result, origin;
-  result.bits[0] = 0b00000000000000000000000000000000;
-  result.bits[1] = 0b00000000000000000000000000000000;
-  result.bits[2] = 0b00000000000000000000000000000000;
-  result.bits[3] = 0b00000000000000000000000000000000;
   int src = 222222222;
   origin.bits[0] = 0b00001101001111101101011110001110;
   origin.bits[1] = 0b00000000000000000000000000000000;
@@ -2125,10 +2041,6 @@ START_TEST(dec_to_int_24) {
 END_TEST
 
 
-//----------float_to_dec-----------
-
-
-
 START_TEST(s21_from_int_to_decimal_1) {
   s21_decimal val;
 
@@ -2150,11 +2062,11 @@ START_TEST(s21_from_int_to_decimal_1) {
   ck_assert_int_eq(val.bits[2], 0);
   ck_assert_int_eq(val.bits[3], 0);
 
-  // s21_from_int_to_decimal(-2147483648, &val);
-  // ck_assert_int_eq(val.bits[0], 2147483648);
-  // ck_assert_int_eq(val.bits[1], 0);
-  // ck_assert_int_eq(val.bits[2], 0);
-  // ck_assert_int_eq(val.bits[3], 2147483648);
+  s21_from_int_to_decimal(-2147483648, &val);
+  ck_assert_int_eq(val.bits[0], 2147483648);
+  ck_assert_int_eq(val.bits[1], 0);
+  ck_assert_int_eq(val.bits[2], 0);
+  ck_assert_int_eq(val.bits[3], 2147483648);
 
   s21_from_int_to_decimal(2147483647, &val);
   ck_assert_int_eq(val.bits[0], 2147483647);
@@ -2722,6 +2634,9 @@ START_TEST(s21_from_decimal_to_floatTest7) {
 }
 END_TEST
 
+
+
+
 //-------float_to_dec--------
 START_TEST(s21_from_float_to_decimal_1) {
   s21_decimal val;
@@ -2935,8 +2850,8 @@ void srunner_add_others_tests(SRunner *sr) {
   tcase_add_test(tc_others, s21_floor_11);
 
   //round
-  tcase_add_test(tc_others, s21_round_1);
-  tcase_add_test(tc_others, s21_round_2);
+tcase_add_test(tc_others, s21_round_1);
+tcase_add_test(tc_others, s21_round_2);
   tcase_add_test(tc_others, s21_round_3);
   tcase_add_test(tc_others, s21_round_4);
   tcase_add_test(tc_others, s21_round_5);
@@ -2963,6 +2878,7 @@ void srunner_add_others_tests(SRunner *sr) {
   tcase_add_test(tc_others, s21_roundTest13);
   tcase_add_test(tc_others, s21_roundTest14);
   tcase_add_test(tc_others, s21_roundTest15);
+
 
 
   // //truncate
@@ -3088,22 +3004,15 @@ tcase_add_test(tc_others, s21_from_decimal_to_float_1);
 
   tcase_add_test(tc_others, s21_from_float_to_decimal_1);
   tcase_add_test(tc_others, s21_from_float_to_decimal_2);
-  // tcase_add_test(tc_others, s21_from_float_to_decimal_3);
   tcase_add_test(tc_others, s21_from_float_to_decimal_4);
   tcase_add_test(tc_others, s21_from_float_to_decimal_5);
-  // tcase_add_test(tc_others, s21_from_float_to_decimal_6);
-  //  tcase_add_test(tc_others, s21_from_float_to_decimal_7);
-  //  tcase_add_test(tc_others, s21_from_float_to_decimal_8);
+
   tcase_add_test(tc_others, s21_from_float_to_decimal_10);
   tcase_add_test(tc_others, s21_from_float_to_decimal_11);
   tcase_add_test(tc_others, s21_from_float_to_decimal_12);
-  // tcase_add_test(tc_others, s21_from_float_to_decimal_13);
   tcase_add_test(tc_others, s21_from_float_to_decimal_14);
   tcase_add_test(tc_others, s21_from_float_to_decimal_15);
   tcase_add_test(tc_others, s21_from_float_to_decimal_16);
-  // tcase_add_test(tc_others, s21_from_float_to_decimal_17);
-  // tcase_add_test(tc_others, s21_from_float_to_decimal_18);
-  
 
   srunner_add_suite(sr, save_v2);
 }

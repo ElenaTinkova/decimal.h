@@ -3,7 +3,7 @@
 
 int s21_from_int_to_decimal(int src, s21_decimal *dst){
     int error = 0;
-    if((src >= -2147483647) && (src <= 2147483647)){
+    if((src >= -2147483648)){
         dst->bits[3] = 0;
         if (src < 0){
             src = src * -1;
