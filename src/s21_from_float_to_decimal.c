@@ -1,6 +1,5 @@
 #include <math.h>
 #include <stdint.h>
-#include <stdio.h>
 
 #include "s21_decimal.h"
 // Из float в decimal
