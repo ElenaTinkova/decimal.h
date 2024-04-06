@@ -1,6 +1,6 @@
 FLAGS = -Wall -Wextra -Werror -Wuninitialized -std=c11 
 TESTFLAGS = -lcheck --coverage 
-SOURCES_FUN:=$(shell find . -name "*.c")
+SOURCES_FUN:=$(wildcard $(SRC_DIR)*.c)
 
 ifeq ($(shell uname), Linux)
 TESTFLAGS += -lm -lsubunit
@@ -17,16 +17,19 @@ s21_decimal.a:
 	@ranlib s21_decimal.a
 
 test: s21_decimal.a
-	@gcc s21_check/*.c s21_decimal.a $(TESTFLAGS) -o testing
+	@gcc tests/*.c s21_decimal.a $(TESTFLAGS) -o testing
 	./testing
 
 gcov_report:
-	@gcc $(TESTFLAGS) *.c -o s21_lib_test $(TESTFLAGS)
+	@gcc $(TESTFLAGS) *.c ./tests/*.c -o s21_lib_test $(TESTFLAGS)
 	./s21_lib_test
 	@gcov -f $(SOURCES_FUN)
 	@lcov --no-external -t test -o coverage.info -c -d . 
 	@genhtml -o html_report coverage.info
 	@open html_report/index.html
+
+lint:
+	@clang-format --style=Google -i *.c *.h tests/*.c tests/*.h
 
 clean:
 	@rm -rf *.o testing.c testing *.a *.gcno *.gcda *.gcov *.info
