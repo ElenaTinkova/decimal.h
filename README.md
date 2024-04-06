@@ -41,19 +41,22 @@
 
 <p>
 
-Unit-тесты и заголовочныe файлы:
+Unit-тесты:
 
-- compare_func_tests.c
-- converters.c
-- math_funcs_tests.c
-- others_tests.c
-- s21_dec_tests.c
++ compare_func_tests.c
++ converters.c
++ math_funcs_tests.c
++ others_tests.c
++ s21_dec_tests.c
 
+<p>
+
+Заголовочныe файлы:
 - s21_dec_tests.h
 - s21_decimal.h
 
 <p>
 
-- Makefile для сборки библиотеки и тестов (с целями all, clean, test, s21_decimal.a, gcov_report)
+Makefile для сборки библиотеки и тестов (с целями all, clean, test, s21_decimal.a, gcov_report).  \
 
 Для тестирования кода и создания отчета о покрытии - создаются обьектые файлы и статическая библиотека s21_decimal.a
